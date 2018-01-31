@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Froot</string>
+
+    <string name="restaurant_image">restaurant image</string>
+    <string name="store_name">store name</string>
+    <string name="store_locale">locale</string>
+    <string name="beef">beef</string>
+    <string name="textView">영어</string>
+    <string name="vegetarian">Vegeterian</string>
+    <string name="allergy">Allergy</string>
+    <string name="vegan">Vegan</string>
+    <string name="lacto">Lacto</string>
+    <string name="lacto_ovo">Lacto ovo</string>
+    <string name="muslim">Muslim</string>
+    <string name="ko">한국어</string>
+    <string name="ja">日本語</string>
+    <string name="en">English</string>
+    <string name="zh_rCN">简体</string>
+    <string name="zh_rTW">繁體</string>
+
+</resources>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1000574250343",
+    "firebase_url": "https://froot-14453.firebaseio.com",
+    "project_id": "froot-14453",
+    "storage_bucket": "froot-14453.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000574250343:android:bc520bbe6f4ffbc1",
+        "android_client_info": {
+          "package_name": "com.example.hansangjin.froot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1000574250343-4aa6r7p07abbeuc5qhaadnfj6n50440e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hansangjin.froot",
+            "certificate_hash": "4568ab2f51dd94d7d1687b11f9db5120bf4886ba"
+          }
+        },
+        {
+          "client_id": "1000574250343-2ekg61q6qaumvq5ae2oiasrl7mjrvumq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5bJDNaXtcSdU9JDEynoz9OWvtgNUn74s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1000574250343-2ekg61q6qaumvq5ae2oiasrl7mjrvumq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

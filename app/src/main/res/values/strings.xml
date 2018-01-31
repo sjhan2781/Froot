@@ -1,0 +1,84 @@
+<resources>
+    <string name="app_name">Froot</string>
+
+    <!--API 관련-->
+
+    <!--구글 로그인-->
+    <string name="google_api_client_key" translatable="false">MqwsoGVnU9uPa06gvQGy</string>
+
+    <!--네이버 지도-->
+    <string name="naver_api_client_key" translatable="false">cffusdBSZjbG3dKWypex</string>
+
+    <!--페이스북 로그인-->
+    <string name="facebook_app_id" translatable="false">909633955882493</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb909633955882493</string>
+
+    <!--카카오 로그인-->
+    <string name="kakao_app_key" translatable="false">6c60440944e2d965b50222cbad72d7a0</string>
+
+    <!--API 관-->
+
+    <!--UI 관련-->
+
+
+    <!--UI 관련-->
+
+    <!--언어-->
+    <string name="ko" translatable="false">한국어</string>
+    <string name="ja" translatable="false">日本語</string>
+    <string name="en" translatable="false">English</string>
+    <string name="zh_rCN" translatable="false">简体</string>
+    <string name="zh_rTW" translatable="false">繁體</string>
+    <!--언어-->
+
+
+    <!--원화-->
+    <string name="Won" translatable="false">\uFFE6</string>
+    <!--원화-->
+
+    <string name="restaurant_image">식당 이미지</string>
+    <string name="store_name">식당 이름</string>
+    <string name="store_locale">지역</string>
+
+
+    <!--식이 유형-->
+    <string name="religion">Religion</string>
+    <string name="vegetarian">Vegeterian</string>
+    <string name="allergy">Allergy</string>
+    <!--식이 유형-->
+
+
+    <!--종교-->
+    <string name="muslim">Muslim</string>
+    <!--종교-->
+
+    <!--채식 유형-->
+    <string name="vegan">비건</string>
+    <string name="lacto">락토</string>
+    <string name="ovo">오보</string>
+    <string name="lacto_ovo">락토 오보</string>
+    <!--채식 유형-->
+
+
+    <string name="beef">소고기</string>
+    <string name="textView">" 영어"</string>
+
+
+    <string name="button_exit">Exit</string>
+    <string name="input_id">USERNAME</string>
+    <string name="input_password">PASSWORD</string>
+    <string name="find_id_password">FIND PASSWORD</string>
+    <string name="button_login">LOGIN</string>
+
+    <string name="description_google_image">Google Login Image</string>
+    <string name="description_facebook_image">Facebook Login Image</string>
+    <string name="description_kakao_image">Kakao Login Image</string>
+
+    <string name="text_signUp"> 아직 회원이 아니신가요? </string>
+    <string name="button_signUp"> <u>회원 가입</u> </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

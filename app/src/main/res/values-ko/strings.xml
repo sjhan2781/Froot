@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="muslim">무슬림</string>
+    <string name="vegetarian">채식주의</string>
+    <string name="allergy">알레르기</string>
+    <string name="vegan">비건</string>
+    <string name="lacto">락토</string>
+    <string name="lacto_ovo">락토 오보</string>
+    <string name="ko">한국어</string>
+    <string name="ja">日本語</string>
+    <string name="en">English</string>
+    <string name="zh_rCN">简体</string>
+    <string name="zh_rTW">繁體</string>
+</resources>

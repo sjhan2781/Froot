@@ -1,0 +1,39 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+        <item name="colorAccent">#dfacdd</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="LoginButton" parent="Widget.AppCompat.Button">
+
+        <item name="colorAccent">@color/logoColor</item>
+        <item name="colorControlNormal">@color/logoColor</item>
+        <item name="colorButtonNormal">@color/logoColor</item>
+        <item name="background">@color/logoColor</item>
+    </style>
+
+    <style name="CustomToolbar" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:background">@color/toolbarColor</item>
+    </style>
+
+    <style name="Base.Widget.AppCompat.RatingBar" parent="Base.Widget.AppCompat.RatingBar">
+
+    </style>
+
+    <style name="Widget.AppCompat.CompoundButton.RadioButton" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:colorPrimary">@color/logoColor</item>
+        <item name="android:colorAccent">@color/logoColor</item>
+
+    </style>
+
+</resources>

@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Froot</string>
+
+    <string name="restaurant_image">식당 이미지</string>
+    <string name="store_name">식당 이름</string>
+    <string name="store_locale">지역</string>
+    <string name="beef">소고기</string>
+    <string name="textView">한국어</string>
+    <string name="muslim">무슬림</string>
+    <string name="vegetarian">채식주의</string>
+    <string name="allergy">알레르기</string>
+    <string name="vegan">비건</string>
+    <string name="lacto">락토</string>
+    <string name="lacto_ovo">락토 오보</string>
+    <string name="ko">한국어</string>
+    <string name="ja">日本語</string>
+    <string name="en">English</string>
+    <string name="zh_rCN">简体</string>
+    <string name="zh_rTW">繁體</string>
+    <string name="religion">종교</string>
+
+</resources>
