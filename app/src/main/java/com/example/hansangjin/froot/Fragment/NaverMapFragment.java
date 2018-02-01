@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.hansangjin.froot.Naver.NMapPOIflagType;
 import com.example.hansangjin.froot.Naver.NaverMapPoint;
+import com.example.hansangjin.froot.R;
 import com.nhn.android.maps.NMapContext;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapLocationManager;
@@ -47,8 +48,8 @@ public class NaverMapFragment extends Fragment implements NMapView.OnMapStateCha
     //내 위치 관련
     private NMapLocationManager locationManager;
 
-    private final String NAVER_CLIENT_ID = "cffusdBSZjbG3dKWypex";
-    private final String NAVER_CLIENT_SECRET = "0yJ9t0Bmfp";
+    private String NAVER_CLIENT_ID;
+    private String NAVER_CLIENT_SECRET = "0yJ9t0Bmfp";
 
     /**
      * Fragment에 포함된 NMapView 객체를 반환함
@@ -86,6 +87,9 @@ public class NaverMapFragment extends Fragment implements NMapView.OnMapStateCha
         super.onCreate(savedInstanceState);
 
         mMapContext = new NMapContext(super.getActivity());
+
+        NAVER_CLIENT_ID = getResources().getString(R.string.naver_api_client_key);
+        NAVER_CLIENT_SECRET = getResources().getString(R.string.naver_api_client_secret);
 
         mMapContext.onCreate();
     }

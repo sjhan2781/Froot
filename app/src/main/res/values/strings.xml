@@ -8,6 +8,7 @@
 
     <!--네이버 지도-->
     <string name="naver_api_client_key" translatable="false">cffusdBSZjbG3dKWypex</string>
+    <string name="naver_api_client_secret" translatable="false">0yJ9t0Bmfp</string>
 
     <!--페이스북 로그인-->
     <string name="facebook_app_id" translatable="false">909633955882493</string>
