@@ -49,7 +49,7 @@ public class NaverMapFragment extends Fragment implements NMapView.OnMapStateCha
     private NMapLocationManager locationManager;
 
     private String NAVER_CLIENT_ID;
-    private String NAVER_CLIENT_SECRET = "0yJ9t0Bmfp";
+    private String NAVER_CLIENT_SECRET;
 
     /**
      * Fragment에 포함된 NMapView 객체를 반환함
