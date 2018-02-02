@@ -3,10 +3,10 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/logoColor</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <!--<item name="colorAccent">@color/colorAccent</item>-->
-        <item name="colorAccent">#dfacdd</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:fitsSystemWindows">true</item>
@@ -27,12 +27,6 @@
     </style>
 
     <style name="Base.Widget.AppCompat.RatingBar" parent="Base.Widget.AppCompat.RatingBar">
-
-    </style>
-
-    <style name="Widget.AppCompat.CompoundButton.RadioButton" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
-        <item name="android:colorPrimary">@color/logoColor</item>
-        <item name="android:colorAccent">@color/logoColor</item>
 
     </style>
 

@@ -1,5 +1,6 @@
 package com.example.hansangjin.froot.Activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import com.example.hansangjin.froot.Listener.AllergyCheckListener;
 import com.example.hansangjin.froot.R;
 
 import java.util.ArrayList;
+
 
 public class CategoryActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
     private ArrayList<ToggleButton> toggleButtons = new ArrayList<>();
@@ -93,7 +95,7 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
         textView_title.setText("식이유형");
 
         exit_button.setVisibility(View.VISIBLE);
-        exit_button.setImageBitmap(ApplicationController.setUpImage(R.drawable.button_exit_2));
+        exit_button.setImageBitmap(ApplicationController.setUpImage(R.drawable.ic_clear_black_36dp));
     }
 
     private void setUpData() {
@@ -140,6 +142,7 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
         toggle_vegetarian.setOnCheckedChangeListener(this);
         toggle_allergy.setOnCheckedChangeListener(this);
 
+        register_button.setOnClickListener(this);
     }
 
     private void setUpRadioButtons() {
@@ -148,6 +151,7 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
             radioButton.setId(i + 1);
             radioButton.setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT));
             radioButton.setText(religionList.get(i));
+            radioButton.setTextColor(getResources().getColor(R.color.black));
             radioButton.setVisibility(View.VISIBLE);
 
             radiogroup_religion.addView(radioButton);
@@ -158,6 +162,8 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
             radioButton.setId(i + 1);
             radioButton.setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT));
             radioButton.setText(vegetarianList.get(i));
+            radioButton.setTextColor(getResources().getColor(R.color.black));
+            radioButton.setHighlightColor(getResources().getColor(R.color.black));
             radioButton.setVisibility(View.VISIBLE);
 
             radiogroup_vegetarian.addView(radioButton);
@@ -169,6 +175,7 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
             checkBox.setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.WRAP_CONTENT));
             checkBox.setText(allergyList.get(i));
             checkBox.setOnCheckedChangeListener(allergyCheckListener);
+            checkBox.setTextColor(getResources().getColor(R.color.black));
             checkBox.setVisibility(View.VISIBLE);
 
             radiogroup_allergy.addView(checkBox);
@@ -210,6 +217,8 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
             } else if (radiogroup_allergy.getVisibility() == View.VISIBLE) {
                 Log.d("isChecked", allergyCheckListener.getSelectedItem().toString());
             }
+
+            startActivity(new Intent(getApplicationContext(), RestaurantMapActivity.class));
 
         }
 

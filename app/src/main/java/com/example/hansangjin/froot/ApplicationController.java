@@ -2,7 +2,6 @@ package com.example.hansangjin.froot;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -65,13 +64,6 @@ public class ApplicationController extends Application {
         if(instance == null)
             throw new IllegalStateException("this application does not inherit com.kakao.GlobalApplication");
         return instance;
-    }
-
-    protected void redirectActivity(Activity previousActivity, Activity nextActivity) {
-        final Intent intent = new Intent(previousActivity.getApplicationContext(), nextActivity.getClass());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(intent);
-        previousActivity.finish();
     }
 
     /**

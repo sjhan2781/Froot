@@ -15,4 +15,6 @@
     <color name="logoColor">#00b852</color>
 
     <color name="textColor">#ffffff</color>
+
+    <color name="black">#000000</color>
 </resources>
