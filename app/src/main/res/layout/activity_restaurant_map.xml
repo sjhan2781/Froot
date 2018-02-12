@@ -22,11 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
         android:scrollbars="horizontal"
-        app:layoutManager="LinearLayoutManager"/>
+        app:layoutManager="LinearLayoutManager" />
 
 
 

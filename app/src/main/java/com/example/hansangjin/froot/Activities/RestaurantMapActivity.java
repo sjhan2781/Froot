@@ -1,26 +1,37 @@
 package com.example.hansangjin.froot.Activities;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hansangjin.froot.Adapter.RestaurantMapRecyclerViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.Data.Restaurant;
 import com.example.hansangjin.froot.Fragment.MapFragment;
+import com.example.hansangjin.froot.Listener.RestaurantRecyclerViewFlingListener;
 import com.example.hansangjin.froot.R;
-import com.nhn.android.maps.NMapView;
+import com.nhn.android.maps.maplib.NGeoPoint;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -28,58 +39,111 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class RestaurantMapActivity extends AppCompatActivity implements Runnable {
+    private final int MAP_ACTIVITY_CODE = 300;
+
+    private final int LOCATION_PERMISSION_REQUEST_CODE = 0;
+
+    private int permissionCheck;
+
     private ImageView toolbar_start_image, toolbar_end_image;
     private TextView textView_title;
 
     private MapFragment mapFragment;
 
     private RecyclerView recyclerView;
-    private RecyclerViewAdapter recyclerViewAdapter;
+    private RestaurantMapRecyclerViewAdapter recyclerViewAdapter;
 
     private ArrayList<Restaurant> restaurantList;
 
     private String NAVER_CLIENT_ID;
     private String NAVER_CLIENT_SECRET;
 
-    private NMapView mMapView;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_map);
 
-        init();
-    }
+        permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+//        permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
 
-    private void init(){
+        if (Build.VERSION.SDK_INT >= 23 && permissionCheck == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+            // 권한 없음
+        }
         createObject();
         setUpToolbar();
         setUpData();
         setUpNaverMap();
+        setUpListener();
         setUpUI();
     }
 
-    private void createObject(){
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        setUpMapOverlay();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            setRestaurantDistance();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                // 갤러리 사용권한에 대한 콜백을 받음
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 권한 동의 버튼 선택
+                    setRestaurantDistance();
+                    recyclerView.invalidate();
+                } else {
+                    // 사용자가 권한 동의를 안함
+                    // 권한 동의안함 버튼 선택
+                    Toast.makeText(RestaurantMapActivity.this, "권한사용을 동의해주셔야 현재 위치 이용이 가능합니다.", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+            }
+            // 예외케이스
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    private void createObject() {
         recyclerView = findViewById(R.id.restaurant_list_view);
         toolbar_start_image = findViewById(R.id.toolbar_button_first);
         textView_title = findViewById(R.id.toolbar_textView_title);
         toolbar_end_image = findViewById(R.id.toolbar_button_second);
 
-        mMapView = findViewById(R.id.mapView);
+        linearLayoutManager = new LinearLayoutManager(this);
 
         restaurantList = new ArrayList<>();
-        recyclerViewAdapter = new RecyclerViewAdapter();
-
+        recyclerViewAdapter = new RestaurantMapRecyclerViewAdapter(restaurantList, this);
 
         NAVER_CLIENT_ID = getResources().getString(R.string.naver_api_client_key);
         NAVER_CLIENT_SECRET = getResources().getString(R.string.naver_api_client_secret);
 
-
     }
 
-    private void setUpToolbar(){
+    private void setUpToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -88,47 +152,81 @@ public class RestaurantMapActivity extends AppCompatActivity implements Runnable
 
         textView_title.setVisibility(View.VISIBLE);
         textView_title.setText("주변 식당 찾기");
-//        toolbar_end_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.button_exit_2));
     }
 
-    private void setUpData(){
+    private void setUpData() {
         restaurantList.add(new Restaurant("게코스 테라스"));
-        restaurantList.add(new Restaurant("구월당"));
+        restaurantList.add(new Restaurant("이태원 구월당"));
         restaurantList.add(new Restaurant("홍대개미"));
 
-        new Thread(this).start();
+        //네이버 식당 정보 검색
+        try {
+            Thread networkThread = new Thread(this);
 
+            networkThread.start();
+            networkThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void setUpNaverMap(){
+    private void setUpNaverMap() {
         mapFragment = new MapFragment();
         mapFragment.setArguments(new Bundle());
-
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.naver_map_fragment, mapFragment);
 
-
-
         fragmentTransaction.commit();
     }
 
-    private void setUpUI(){
+    private void setUpUI() {
+        int pixel = (int) (16 * ApplicationController.metrics.density);
+
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
-                outRect.right = 15;
+                outRect.left = 8;
+                outRect.right = 8;
             }
         });
 
+
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        recyclerView.setOnFlingListener(new RestaurantRecyclerViewFlingListener(this, recyclerView));
+
+        linearLayoutManager.setItemPrefetchEnabled(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(recyclerViewAdapter);
 
+        Collections.sort(restaurantList);
+
+        recyclerView.setPadding(pixel, 0, pixel, 0);
+        recyclerView.setClipToPadding(false);   //양쪽에 아이템 살짝 보이게
+    }
+
+    private void setUpListener() {
+        recyclerViewAdapter.setItemClick(new RestaurantMapRecyclerViewAdapter.ItemClick() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(getApplicationContext(), RestaurantDetailActivity.class);
+                intent.putExtra("restaurant", restaurantList.get(position));
+                startActivityForResult(intent, MAP_ACTIVITY_CODE);
+            }
+        });
+    }
+
+    private void setUpMapOverlay(){
+        mapFragment.setRestaurants(restaurantList);
+        mapFragment.initMarker();
+//        setMarker(0);
     }
 
     //식당 검색
-    private void getSearchResult(){
-        for(int i = 0; i < restaurantList.size(); i++) {
+    private void getSearchResult() {
+        for (int i = 0; i < restaurantList.size(); i++) {
             StringBuilder sb = null;
             String keyword = restaurantList.get(i).getName();
 
@@ -144,7 +242,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements Runnable
 
                 int responseCode = connection.getResponseCode();
                 BufferedReader br;
-                if (responseCode == 200) {
+                if (responseCode == connection.HTTP_OK) {
                     br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 } else {
                     br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
@@ -153,7 +251,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements Runnable
                 String line;
 
                 while ((line = br.readLine()) != null) {
-                    sb.append(line + "\n");
+                    sb.append(line);
                 }
 
                 br.close();
@@ -165,121 +263,123 @@ public class RestaurantMapActivity extends AppCompatActivity implements Runnable
             }
         }
         Log.d("Restaurant", restaurantList.toString());
+    }
 
+    private void setRestaurantInfo(StringBuilder sb, int position) {
+        try {
+            JSONObject jsonObject = new JSONObject(sb.toString());
+
+            JSONArray items = jsonObject.getJSONArray("items");
+
+            for (int j = 0; j < items.length(); j++) {
+                JSONObject value = items.getJSONObject(j);
+
+                restaurantList.get(position).setName(Html.fromHtml(value.getString("title")).toString());
+                restaurantList.get(position).setLink(value.getString("link"));
+                restaurantList.get(position).setCategory(value.getString("category"));
+                restaurantList.get(position).setDescription(value.getString("description"));
+                restaurantList.get(position).setTelephone(value.getString("telephone"));
+                restaurantList.get(position).setAddress(value.getString("address"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
 
-    private void setRestaurantInfo(StringBuilder sb, int position){
-        String data = sb.toString();
-        String[] array;
-        array = data.split("\"");
+    private void convertCoor() {
+        for (int i = 0; i < restaurantList.size(); i++) {
+            try {
+                String addr = URLEncoder.encode(restaurantList.get(i).getAddress(), "UTF-8");
+                String apiURL = "https://openapi.naver.com/v1/map/geocode?query=" + addr; //json
+//                String apiURL = "https://openapi.naver.com/v1/map/geocode.xml?query=" + addr; // xml
+                URL url = new URL(apiURL);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("X-Naver-Client-Id", NAVER_CLIENT_ID);
+                connection.setRequestProperty("X-Naver-Client-Secret", NAVER_CLIENT_SECRET);
 
-        for (int i = 0; i < array.length; i++) {
-            //arry[i+2]가 json에서 내가 원하는 데이터
-            switch (array[i].toString()){
-                case "title" :
-//                    restaurantList.get(position).setName(array[i+2]);
-                    break;
-                case "link" :
-                    restaurantList.get(position).setLink(array[i+2]);
-                    break;
-                case "category" :
-                    restaurantList.get(position).setCategory(array[i+2]);
-                    break;
-                case "description" :
-                    restaurantList.get(position).setDescription(array[i+2]);
-                    break;
-                case "telephone" :
-                    restaurantList.get(position).setTelephone(array[i+2]);
-                    break;
-                case "address" :
-                    restaurantList.get(position).setAddress(array[i+2]);
-                    break;
-                case "mapx" :
-                    restaurantList.get(position).setMapx(array[i+2]);
-                    break;
-                case "mapy" :
-                    restaurantList.get(position).setMapy(array[i+2]);
-                    break;
+                int responseCode = connection.getResponseCode();
+                BufferedReader br;
+                StringBuilder sb;
+
+                if (responseCode == connection.HTTP_OK) {
+                    br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                } else {
+                    br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                }
+                sb = new StringBuilder();
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                br.close();
+                connection.disconnect();
+
+
+                setCoor(sb, i);
+
+            } catch (Exception e) {
+                System.out.println(e);
             }
         }
+    }
+
+    private void setCoor(StringBuilder sb, int position) {
+
+        try {
+            JSONObject result = new JSONObject(sb.toString()).getJSONObject("result");
+
+            JSONArray items = result.getJSONArray("items");
+
+            for (int j = 0; j < items.length(); j++) {
+                JSONObject point = items.getJSONObject(j).getJSONObject("point");
+
+                String x = point.getString("x");
+                String y = point.getString("y");
+
+                restaurantList.get(position).setMapx(Double.parseDouble(x));
+                restaurantList.get(position).setMapy(Double.parseDouble(y));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void setRestaurantDistance(){
+        mapFragment.startLocation();
+
+        NGeoPoint myLocation = mapFragment.getMyLocation();
+//        myLocation = new NGeoPoint(127.108099, 37.366034);
+
+        for(Restaurant restaurant : restaurantList) {
+            NGeoPoint restaurantPoint = new NGeoPoint(restaurant.getMapx(), restaurant.getMapy());
+//            double distance = NGeoPoint.getDistance(restaurantPoint, myLocation);
+//
+//            restaurant.setDistance(distance);
+        }
+    }
+
+    public void setSelectedChild(int position) {
+        recyclerView.smoothScrollToPosition(position);
+    }
+
+    public void setMarker(int position) {
+        mapFragment.setMarker(position);
     }
 
     @Override
     public void run() {
         //네이버 검색 네트워킹을 위한 쓰레드
         getSearchResult();
-
-//        Log.d("Restaurants", restaurantList.toString());
+        convertCoor();
 
         return;
     }
 
-    class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        private int selectedPos = 0;
 
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_resaurant_map, parent, false);
-
-            return new MyViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final MyViewHolder holder, int position) {
-            final int curPos = position;
-
-            holder.textView_restaurant_name.setText(restaurantList.get(position).getName());
-            holder.textView_restaurant_category.setText(restaurantList.get(position).getCategory());
-            holder.textView_restaurant_phonenumber.setText(restaurantList.get(position).getTelephone());
-
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    notifyItemChanged(selectedPos);
-                    selectedPos = curPos;
-//                    activity.setSelectedFood(foods.get(curPos));
-                    notifyItemChanged(selectedPos);
-                    Log.d("item", holder.textView_restaurant_name.getText().toString());
-                }
-            });
-
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Toast.makeText(RestaurantMapActivity.this, "LongClickListener", Toast.LENGTH_LONG).show();
-
-                    return true;
-                }
-            });
-
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return restaurantList.size();
-        }
-
-    }
-
-    class MyViewHolder extends RecyclerView.ViewHolder {
-
-        private CardView cardView;
-
-        private TextView textView_restaurant_name, textView_restaurant_category, textView_restaurant_phonenumber;
-        private ImageView store_image;
-
-
-        public MyViewHolder(View parent) {
-            super(parent);
-
-            this.textView_restaurant_name = parent.findViewById(R.id.textView_restaurant_name);
-            this.textView_restaurant_category = parent.findViewById(R.id.textView_restaurant_category);
-            this.textView_restaurant_phonenumber = parent.findViewById(R.id.textView_restaurant_phonenumber);
-
-        }
-    }
 }

@@ -1,12 +1,15 @@
 package com.example.hansangjin.froot.Data;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 /**
  * Created by hansangjin on 2018. 1. 18..
  */
 
-public class Restaurant implements Serializable {
+public class Restaurant implements Serializable, Comparable<Restaurant> {
     private static final long serialVersionUID = -4977672600535828310L;
 
     private String name;
@@ -15,8 +18,9 @@ public class Restaurant implements Serializable {
     private String description;
     private String telephone;
     private String address;
-    private String mapx;
-    private String mapy;
+    private double distance;
+    private double mapx;
+    private double mapy;
 
     public Restaurant() {
     }
@@ -73,20 +77,50 @@ public class Restaurant implements Serializable {
         this.address = address;
     }
 
-    public String getMapx() {
+    public double getMapx() {
         return mapx;
     }
 
-    public void setMapx(String mapx) {
+    public void setMapx(double mapx) {
         this.mapx = mapx;
     }
 
-    public String getMapy() {
+    public double getMapy() {
         return mapy;
     }
 
-    public void setMapy(String mapy) {
+    public void setMapy(double mapy) {
         this.mapy = mapy;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public String getConversionDistance(){
+        if(getDistance() != 0) {
+            DecimalFormat format = new DecimalFormat(".#");
+
+            return format.format(getDistance() / 1000) + " km";
+        }
+        else{
+            return "";
+        }
+    }
+
+    @Override
+    public int compareTo(@NonNull Restaurant o) {
+        if(this.distance > o.getDistance()){
+            return 1;
+        } else if(this.distance == o.getDistance()){
+            return 0;
+        } else{
+           return -1;
+        }
     }
 
     @Override
@@ -98,8 +132,9 @@ public class Restaurant implements Serializable {
                 ", description='" + description + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", address='" + address + '\'' +
-                ", mapx='" + mapx + '\'' +
-                ", mapy='" + mapy + '\'' +
+                ", distance=" + distance +
+                ", mapx=" + mapx +
+                ", mapy=" + mapy +
                 '}';
     }
 }

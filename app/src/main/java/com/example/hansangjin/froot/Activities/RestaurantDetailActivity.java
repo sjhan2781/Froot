@@ -1,10 +1,12 @@
 package com.example.hansangjin.froot.Activities;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.example.hansangjin.froot.Adapter.FoodRecyclerViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.Data.Food;
+import com.example.hansangjin.froot.Data.Restaurant;
 import com.example.hansangjin.froot.R;
 
 import java.util.ArrayList;
@@ -28,6 +31,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private FoodRecyclerViewAdapter foodRecyclerViewAdapter;
     private ArrayList<Food> foodList;
 
+    private Restaurant restaurant;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +45,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private void init(){
         creatObjects();
-        setUpToolbar();
         setUpData();
+        setUpToolbar();
         setUpUI();
         setUpListener();
     }
@@ -58,17 +63,24 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         foodList = new ArrayList<>();
         foodRecyclerViewAdapter = new FoodRecyclerViewAdapter(this, foodList);
+
+        intent = getIntent();
     }
 
     private void setUpToolbar(){
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar_start_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.button_exit_2));
-        textView_title.setText("맞춤 식당");
-        toolbar_end_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.button_exit_2));
+
+        toolbar_start_image.setVisibility(View.VISIBLE);
+        toolbar_start_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.ic_clear_black_36dp));
+        textView_title.setVisibility(View.VISIBLE);
+        textView_title.setText(restaurant.getName());
     }
 
     private void setUpData(){
+        restaurant = (Restaurant) intent.getSerializableExtra("restaurant");
+
+        Log.d("rrrrr", restaurant.toString());
 
         foodList.add(new Food("a", 1000));
         foodList.add(new Food("b", 2000));
@@ -81,6 +93,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void setUpUI(){
+
+
         recyclerView_food.setAdapter(foodRecyclerViewAdapter);
         recyclerView_food.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override

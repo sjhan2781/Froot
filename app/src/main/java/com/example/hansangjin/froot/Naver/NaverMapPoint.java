@@ -22,6 +22,10 @@ import com.nhn.android.mapviewer.overlay.NMapResourceProvider;
 public class NaverMapPoint extends NMapResourceProvider {
     Context mContext;
 
+    public static final int DEFAULT = 1;
+    public static final int SELECTED = 2;
+
+
     public NaverMapPoint(Context context) {
         super(context);
         mContext = context;
@@ -40,21 +44,29 @@ public class NaverMapPoint extends NMapResourceProvider {
         int height = (int) (bitmap.getHeight() * ratio);
 
         Drawable drawable = new BitmapDrawable(mContext.getResources(), Bitmap.createScaledBitmap(bitmap, width, height, true));
-
-        if(drawable == null){
-            Log.d("Drawable", "null");
-        }else{
-            Log.d("Drawable", "not null");
-            return drawable;
-        }
-
+//
+//        if(drawable == null){
+//            return null;
+//        }
+//        else{
+//            return drawable;
+//        }
         return drawable;
     }
 
     @Override
     protected Drawable getDrawableForMarker(int i, boolean b, NMapOverlayItem nMapOverlayItem) {
-        return getScaledDrawable(R.drawable.button_facebook_login_9);
-//        return mContext.getResources().getDrawable(R.drawable.button_facebook_login_9);
+        if (b) {
+        }
+        Log.d("drawbles", i + ", " + b);
+
+        if (i == NMapPOIflagType.PIN)
+            return getScaledDrawable(R.drawable.button_facebook_login_9);
+        else
+            return getScaledDrawable(R.drawable.button_kakao_login_11);
+
+//        return getScaledDrawable(R.drawable.button_facebook_login_9);
+
     }
 
     @Override
@@ -86,7 +98,10 @@ public class NaverMapPoint extends NMapResourceProvider {
 
     @Override
     public Drawable[] getLocationDot() {
-        return new Drawable[0];
+        Drawable[] drawable = new Drawable[1];
+        drawable[0] = mContext.getResources().getDrawable(R.drawable.button_google_login_10);
+
+        return drawable;
     }
 
     @Override
