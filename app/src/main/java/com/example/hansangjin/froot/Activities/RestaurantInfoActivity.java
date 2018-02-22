@@ -10,6 +10,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.hansangjin.froot.ApplicationController;
+import com.example.hansangjin.froot.CustomView.GradientTextView;
 import com.example.hansangjin.froot.R;
 import com.nex3z.flowlayout.FlowLayout;
 
@@ -40,6 +41,12 @@ public class RestaurantInfoActivity extends AppCompatActivity {
         setUpListener();
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.activity_not_move, R.anim.activity_right_out);
+    }
+
     private void creatObjects() {
         recyclerView_restaurant_image = findViewById(R.id.recyclerView_restaurant);
         textView_restaurant_name = findViewById(R.id.textView_restaurant_name);
@@ -53,7 +60,7 @@ public class RestaurantInfoActivity extends AppCompatActivity {
     private void setUpToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         ImageView toolbar_start_image = findViewById(R.id.toolbar_button_first);
-        TextView textView_title = findViewById(R.id.toolbar_textView_title);
+        GradientTextView textView_title = findViewById(R.id.toolbar_textView_title);
         ImageView toolbar_end_image = findViewById(R.id.toolbar_button_second);
 
         setSupportActionBar(toolbar);

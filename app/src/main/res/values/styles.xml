@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/logoColor</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/logoColor</item>
         <!--<item name="colorAccent">@color/colorAccent</item>-->
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowTranslucentNavigation">true</item>
@@ -23,7 +23,7 @@
     </style>
 
     <style name="CustomToolbar" parent="Base.ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:background">@color/toolbarColor</item>
+        <item name="android:background">@color/white</item>
     </style>
 
     <style name="Base.Widget.AppCompat.RatingBar" parent="Base.Widget.AppCompat.RatingBar">

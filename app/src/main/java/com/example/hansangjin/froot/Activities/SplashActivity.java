@@ -97,6 +97,8 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
 
                 Intent intent = new Intent(SplashActivity.this, nextActivity);
                 startActivity(intent);          //다음 액티비티로 전환
+                overridePendingTransition(R.anim.activity_right_in,R.anim.activity_not_move);
+
                 finish();   //현재 액티비티를 종료
                 break;
         }

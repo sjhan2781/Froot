@@ -22,14 +22,13 @@
             android:layout_centerVertical="true"
             android:visibility="gone" />
 
-        <TextView
+        <com.example.hansangjin.froot.CustomView.GradientTextView
             android:id="@+id/toolbar_textView_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_marginTop="17dp"
-            android:textColor="#ffffff"
             android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="gone" />

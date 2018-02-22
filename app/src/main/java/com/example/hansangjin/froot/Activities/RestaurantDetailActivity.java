@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.hansangjin.froot.Adapter.FoodRecyclerViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
+import com.example.hansangjin.froot.CustomView.GradientTextView;
 import com.example.hansangjin.froot.Data.Food;
 import com.example.hansangjin.froot.Data.Restaurant;
 import com.example.hansangjin.froot.R;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 
 public class RestaurantDetailActivity extends AppCompatActivity {
     private ImageView toolbar_start_image, toolbar_end_image;
-    private TextView textView_title;
+    private GradientTextView textView_title;
 
     private TextView textView_food_name, textView_food_price;
     private RatingBar ratingBar;
@@ -49,6 +50,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         setUpToolbar();
         setUpUI();
         setUpListener();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.activity_not_move, R.anim.activity_right_out);
     }
 
     private void creatObjects(){

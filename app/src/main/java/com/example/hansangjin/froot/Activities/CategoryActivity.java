@@ -21,6 +21,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.hansangjin.froot.ApplicationController;
+import com.example.hansangjin.froot.CustomView.GradientTextView;
 import com.example.hansangjin.froot.Listener.AllergyCheckListener;
 import com.example.hansangjin.froot.R;
 
@@ -34,7 +35,7 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
     private RadioGroup radiogroup_religion, radiogroup_vegetarian, radiogroup_allergy;
     private Button register_button;
     private ImageView exit_button;
-    private TextView textView_title;
+    private GradientTextView textView_title;
 
     private ArrayList<String> religionList = new ArrayList<>();
     private ArrayList<String> allergyList = new ArrayList<>();
@@ -219,6 +220,7 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
             }
 
             startActivity(new Intent(getApplicationContext(), RestaurantMapActivity.class));
+            overridePendingTransition(R.anim.activity_right_in,R.anim.activity_not_move);
 
         }
 

@@ -1,15 +1,19 @@
 package com.example.hansangjin.froot.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Rect;
-import android.os.Build;
+import android.graphics.Shader;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,15 +24,26 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.hansangjin.froot.Adapter.RestaurantMapRecyclerViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.Data.Restaurant;
-import com.example.hansangjin.froot.Fragment.MapFragment;
-import com.example.hansangjin.froot.Listener.RestaurantRecyclerViewFlingListener;
+import com.example.hansangjin.froot.Listener.MapMarkerClickListener;
+import com.example.hansangjin.froot.Listener.ScrollListener;
 import com.example.hansangjin.froot.R;
-import com.nhn.android.maps.maplib.NGeoPoint;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,27 +56,36 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class RestaurantMapActivity extends AppCompatActivity implements Runnable {
+public class RestaurantMapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.ConnectionCallbacks, LocationListener, Runnable {
     private final int MAP_ACTIVITY_CODE = 300;
 
     private final int LOCATION_PERMISSION_REQUEST_CODE = 0;
 
     private int permissionCheck;
+    private boolean mLocationPermissionGranted;
 
     private ImageView toolbar_start_image, toolbar_end_image;
     private TextView textView_title;
 
-    private MapFragment mapFragment;
+    private SupportMapFragment mapFragment;
+    private GoogleMap googleMap;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private Location myLocation;
 
+    private int selected_index;
     private RecyclerView recyclerView;
     private RestaurantMapRecyclerViewAdapter recyclerViewAdapter;
 
     private ArrayList<Restaurant> restaurantList;
+    private ArrayList<Marker> markers;
 
     private String NAVER_CLIENT_ID;
     private String NAVER_CLIENT_SECRET;
 
     private LinearLayoutManager linearLayoutManager;
+    private CameraPosition mCameraPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,54 +95,47 @@ public class RestaurantMapActivity extends AppCompatActivity implements Runnable
         permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
 //        permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
 
-        if (Build.VERSION.SDK_INT >= 23 && permissionCheck == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
-            // 권한 없음
-        }
+        getLocationPermission();
+
         createObject();
         setUpToolbar();
         setUpData();
-        setUpNaverMap();
+        setUpGoogleApiClient();
         setUpListener();
         setUpUI();
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        setUpMapOverlay();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+    }
 
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            setRestaurantDistance();
-        }
-
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.activity_not_move, R.anim.activity_right_out);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
         switch (requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE: {
-                // 갤러리 사용권한에 대한 콜백을 받음
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // 권한 동의 버튼 선택
-                    setRestaurantDistance();
-                    recyclerView.invalidate();
-                } else {
-                    // 사용자가 권한 동의를 안함
-                    // 권한 동의안함 버튼 선택
-                    Toast.makeText(RestaurantMapActivity.this, "권한사용을 동의해주셔야 현재 위치 이용이 가능합니다.", Toast.LENGTH_SHORT).show();
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                    updateLocationUI();
+                    getDeviceLocation();
                 }
-
-                break;
             }
-            // 예외케이스
         }
     }
 
@@ -136,11 +153,28 @@ public class RestaurantMapActivity extends AppCompatActivity implements Runnable
         linearLayoutManager = new LinearLayoutManager(this);
 
         restaurantList = new ArrayList<>();
+        markers = new ArrayList<>();
         recyclerViewAdapter = new RestaurantMapRecyclerViewAdapter(restaurantList, this);
 
         NAVER_CLIENT_ID = getResources().getString(R.string.naver_api_client_key);
         NAVER_CLIENT_SECRET = getResources().getString(R.string.naver_api_client_secret);
 
+
+    }
+
+    private void setUpGoogleApiClient() {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .enableAutoManage(this /* FragmentActivity */,
+                            this /* OnConnectionFailedListener */)
+                    .addConnectionCallbacks(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+
+        createLocationRequest();
+
+        mGoogleApiClient.connect();
     }
 
     private void setUpToolbar() {
@@ -150,14 +184,21 @@ public class RestaurantMapActivity extends AppCompatActivity implements Runnable
         toolbar_start_image.setVisibility(View.VISIBLE);
         toolbar_start_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.ic_clear_black_36dp));
 
+        Shader textShader=new LinearGradient(0, 0, 0, 100,
+                new int[]{Color.GREEN,Color.BLUE},
+                new float[]{0, 1}, Shader.TileMode.CLAMP);
+
         textView_title.setVisibility(View.VISIBLE);
         textView_title.setText("주변 식당 찾기");
+        textView_title.getPaint().setShader(textShader);
+
+//        textView_title.setTextColor(getResources().getColor(R.color.logoColor));
     }
 
     private void setUpData() {
-        restaurantList.add(new Restaurant("게코스 테라스"));
-        restaurantList.add(new Restaurant("이태원 구월당"));
-        restaurantList.add(new Restaurant("홍대개미"));
+        restaurantList.add(new Restaurant(0, "게코스 테라스"));
+        restaurantList.add(new Restaurant(1, "이태원 구월당"));
+        restaurantList.add(new Restaurant(2, "홍대개미"));
 
         //네이버 식당 정보 검색
         try {
@@ -170,16 +211,6 @@ public class RestaurantMapActivity extends AppCompatActivity implements Runnable
         }
     }
 
-    private void setUpNaverMap() {
-        mapFragment = new MapFragment();
-        mapFragment.setArguments(new Bundle());
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.naver_map_fragment, mapFragment);
-
-        fragmentTransaction.commit();
-    }
-
     private void setUpUI() {
         int pixel = (int) (16 * ApplicationController.metrics.density);
 
@@ -187,23 +218,25 @@ public class RestaurantMapActivity extends AppCompatActivity implements Runnable
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
-                outRect.left = 8;
-                outRect.right = 8;
+                outRect.left = 32;
+                outRect.right = 32;
             }
         });
 
 
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
-        recyclerView.setOnFlingListener(new RestaurantRecyclerViewFlingListener(this, recyclerView));
+//        recyclerView.setOnFlingListener(new RestaurantRecyclerViewFlingListener(this, recyclerView));
+        recyclerView.addOnScrollListener(new ScrollListener(this, recyclerView.computeHorizontalScrollExtent()));
 
+        recyclerView.setNestedScrollingEnabled(true);
+        linearLayoutManager.setSmoothScrollbarEnabled(true);
         linearLayoutManager.setItemPrefetchEnabled(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(recyclerViewAdapter);
 
-        Collections.sort(restaurantList);
 
-        recyclerView.setPadding(pixel, 0, pixel, 0);
+        recyclerView.setPadding(pixel * 2, 0, pixel * 2, 0);
         recyclerView.setClipToPadding(false);   //양쪽에 아이템 살짝 보이게
     }
 
@@ -214,14 +247,16 @@ public class RestaurantMapActivity extends AppCompatActivity implements Runnable
                 Intent intent = new Intent(getApplicationContext(), RestaurantDetailActivity.class);
                 intent.putExtra("restaurant", restaurantList.get(position));
                 startActivityForResult(intent, MAP_ACTIVITY_CODE);
+                overridePendingTransition(R.anim.activity_right_in, R.anim.activity_not_move);
             }
         });
     }
 
-    private void setUpMapOverlay(){
-        mapFragment.setRestaurants(restaurantList);
-        mapFragment.initMarker();
-//        setMarker(0);
+    private void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     //식당 검색
@@ -350,26 +385,178 @@ public class RestaurantMapActivity extends AppCompatActivity implements Runnable
 
     }
 
-    private void setRestaurantDistance(){
-        mapFragment.startLocation();
-
-        NGeoPoint myLocation = mapFragment.getMyLocation();
-//        myLocation = new NGeoPoint(127.108099, 37.366034);
-
-        for(Restaurant restaurant : restaurantList) {
-            NGeoPoint restaurantPoint = new NGeoPoint(restaurant.getMapx(), restaurant.getMapy());
-//            double distance = NGeoPoint.getDistance(restaurantPoint, myLocation);
-//
-//            restaurant.setDistance(distance);
+    public void setSelectedChild(int position) {
+        if(markers.size() != 0) {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLng(markers.get(position).getPosition()));
+            setMarkers(position);
         }
     }
 
-    public void setSelectedChild(int position) {
-        recyclerView.smoothScrollToPosition(position);
+    private void initMarkers() {
+        Marker marker;
+        MarkerOptions markerOptions;
+
+        for (Restaurant restaurant : restaurantList) {
+            LatLng latLng = new LatLng(restaurant.getMapy(), restaurant.getMapx());
+            markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_facebook_login_9)));
+
+            marker = googleMap.addMarker(markerOptions);
+            marker.setTag(restaurant);
+
+            markers.add(marker);
+        }
+
+        selected_index = 0;
+        markers.get(selected_index).setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_kakao_login_11)));
     }
 
-    public void setMarker(int position) {
-        mapFragment.setMarker(position);
+    public void setMarkers(int position) {
+        if(position != selected_index) {
+            Marker marker = markers.get(selected_index);
+
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_facebook_login_9)));
+            marker.setZIndex(1.0f);
+
+            selected_index = position;
+            marker = markers.get(selected_index);
+
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_kakao_login_11)));
+            marker.setZIndex(2.0f);
+        }
+    }
+
+    public void animateCamera(int position){
+        if(position != selected_index) {
+            Marker marker = markers.get(position);
+
+            googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+            setMarkers(position);
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.56, 126.97)));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
+        googleMap.setOnMarkerClickListener(new MapMarkerClickListener(this));
+
+        // Turn on the My Location layer and the related control on the map.
+        updateLocationUI();
+
+        // Get the current location of the device and set the position of the map.
+        getDeviceLocation();
+    }
+
+    private void updateLocationUI() {
+        if (googleMap == null) {
+            return;
+        }
+        try {
+            if (mLocationPermissionGranted) {
+                googleMap.setMyLocationEnabled(true);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+            } else {
+                googleMap.setMyLocationEnabled(false);
+                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                myLocation = null;
+                getLocationPermission();
+            }
+        } catch (SecurityException e) {
+            Log.e("Exception: %s", e.getMessage());
+        }
+
+    }
+
+    private void getLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getDeviceLocation() {
+        if (mLocationPermissionGranted) {
+            myLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        }
+
+        // Set the map's camera position to the current location of the device.
+        if (mCameraPosition != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+        } else if (myLocation != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(myLocation.getLatitude(),
+                            myLocation.getLongitude()), 10));
+
+
+            for (Restaurant restaurant : restaurantList) {
+                float distance;
+                Location restaurantLocation = new Location(restaurant.getName());
+                restaurantLocation.setLatitude(restaurant.getMapy());
+                restaurantLocation.setLongitude(restaurant.getMapx());
+                distance = myLocation.distanceTo(restaurantLocation);
+
+                restaurant.setDistance(distance);
+            }
+            Collections.sort(restaurantList);
+
+            recyclerViewAdapter.notifyDataSetChanged();
+
+        } else {
+            Log.d("aaaaaaaaaaa", "Current location is null. Using defaults.");
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.56, 126.97), 10));
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
+
+        initMarkers();
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+        mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        myLocation = location;
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     @Override

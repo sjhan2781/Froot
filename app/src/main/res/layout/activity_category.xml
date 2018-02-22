@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.hansangjin.froot.Activities.CategoryActivity">
 
+
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar"/>
@@ -104,4 +106,5 @@
             android:textSize="19sp" />
 
     </RelativeLayout>
+
 </RelativeLayout>

@@ -11,8 +11,8 @@
         layout="@layout/layout_toolbar" />
 
     <fragment
-        android:id="@+id/naver_map_fragment"
-        android:name="com.example.hansangjin.froot.Fragment.MapFragment"
+        android:id="@+id/map_fragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"/>
@@ -23,8 +23,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
+        android:nestedScrollingEnabled="true"
         android:orientation="horizontal"
         android:scrollbars="horizontal"
+        android:splitMotionEvents="true"
         app:layoutManager="LinearLayoutManager" />
 
 

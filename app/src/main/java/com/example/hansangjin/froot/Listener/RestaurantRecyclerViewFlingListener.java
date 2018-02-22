@@ -15,9 +15,11 @@ public class RestaurantRecyclerViewFlingListener extends RecyclerView.OnFlingLis
     RestaurantMapActivity activity;
 
     public RestaurantRecyclerViewFlingListener(RestaurantMapActivity activity, RecyclerView recyclerView) {
+        super();
         this.activity = activity;
         this.recyclerView = recyclerView;
     }
+
 
     @Override
     public boolean onFling(int velocityX, int velocityY) {
@@ -27,12 +29,12 @@ public class RestaurantRecyclerViewFlingListener extends RecyclerView.OnFlingLis
         if (velocityX > 0){
             position = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
         }
-        else{
+        else {
             position = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         }
 
         recyclerView.smoothScrollToPosition(position);
-        activity.setMarker(position);
+        activity.animateCamera(position);
         Log.d("position", position + "");
 
         return true;

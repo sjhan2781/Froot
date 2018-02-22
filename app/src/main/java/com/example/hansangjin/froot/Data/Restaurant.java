@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 public class Restaurant implements Serializable, Comparable<Restaurant> {
     private static final long serialVersionUID = -4977672600535828310L;
 
+    private int ID;
     private String name;
     private String link;
     private String category;
@@ -27,6 +28,19 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
 
     public Restaurant(String name) {
         this.name = name;
+    }
+
+    public Restaurant(int ID, String name) {
+        this.ID = ID;
+        this.name = name;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public String getName() {

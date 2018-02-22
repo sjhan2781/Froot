@@ -18,13 +18,15 @@ import java.util.ArrayList;
  * Created by hansangjin on 2018. 2. 5..
  */
 
-public class RestaurantMapRecyclerViewAdapter extends RecyclerView.Adapter<RestaurantMapRecyclerViewAdapter.MyViewHolder> implements View.OnClickListener{
+public class RestaurantMapRecyclerViewAdapter extends RecyclerView.Adapter<RestaurantMapRecyclerViewAdapter.MyViewHolder>
+        implements View.OnClickListener{
     private static int selectedPos = 0;
     private ArrayList<Restaurant> restaurantList = new ArrayList<>();
     private RestaurantMapActivity activity;
 
     //아이템 클릭시 실행 함수
     private ItemClick itemClick;
+
 
     public interface ItemClick {
         public void onClick(View view,int position);
@@ -104,6 +106,7 @@ public class RestaurantMapRecyclerViewAdapter extends RecyclerView.Adapter<Resta
     public int getItemCount() {
         return restaurantList.size();
     }
+
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 

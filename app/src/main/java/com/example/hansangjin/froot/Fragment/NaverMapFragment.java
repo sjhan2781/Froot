@@ -11,7 +11,7 @@ import com.example.hansangjin.froot.R;
  * Created by hansangjin on 2018. 2. 2..
  */
 
-public class MapFragment extends NMapFragment{
+public class NaverMapFragment extends NMapFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -7,10 +7,10 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.example.hansangjin.froot.Adapter.RestaurantRecycleViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
+import com.example.hansangjin.froot.CustomView.GradientTextView;
 import com.example.hansangjin.froot.Data.Restaurant;
 import com.example.hansangjin.froot.R;
 
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class RestaurantListActivity extends AppCompatActivity {
     private ImageView toolbar_start_image, toolbar_end_image;
-    private TextView textView_title;
+    private GradientTextView textView_title;
 
     private RecyclerView restaurant_recyclerView;
     private Spinner spinner_kind, spinner_location;
