@@ -96,7 +96,7 @@ public class ApplicationController extends Application {
 
         int height = (int) (bitmap.getHeight() * ratio);
 
-        return Bitmap.createScaledBitmap(bitmap, width, height, true);
+        return Bitmap.createScaledBitmap(bitmap, width/2, height/2, true);
     }
 
     //drawable 크기 변환

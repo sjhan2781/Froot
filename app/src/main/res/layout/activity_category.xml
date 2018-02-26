@@ -6,105 +6,30 @@
     android:layout_height="match_parent"
     tools:context="com.example.hansangjin.froot.Activities.CategoryActivity">
 
-
-
     <include
         android:id="@+id/toolbar"
-        layout="@layout/layout_toolbar"/>
+        layout="@layout/layout_toolbar" />
 
-    <RelativeLayout
+
+    <Button
+        android:id="@+id/button_register"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        tools:ignore="UselessParent"
-        android:layout_below="@+id/toolbar">
+        android:layout_height="52dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="17dp"
+        android:background="@drawable/button_recognize_selector"
+        android:textColor="#87000000"
+        android:textSize="19sp" />
 
-        <ToggleButton
-            android:id="@+id/toggle_religion"
-            android:layout_width="122dp"
-            android:layout_height="36dp"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/category_box_selector"
-            android:text="@string/religion"
-            android:textOff="@string/religion"
-            android:textOn="@string/religion"
-            android:textSize="16sp" />
+    <ExpandableListView
+        android:id="@+id/expandableListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_register"
+        android:layout_below="@+id/toolbar"
+        android:groupIndicator="@null" />
 
-        <RadioGroup
-            android:id="@+id/radio_group_religion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/toggle_religion"
-            android:layout_marginTop="11dp"
-            android:background="#dcdcdc"
-            android:paddingStart="15dp"
-            android:visibility="gone">
-
-        </RadioGroup>
-
-        <ToggleButton
-            android:id="@+id/toggle_vegetarian"
-            android:layout_width="122dp"
-            android:layout_height="36dp"
-            android:layout_below="@+id/radio_group_religion"
-            android:layout_marginTop="26dp"
-            android:background="@drawable/category_box_selector"
-            android:text="@string/vegetarian"
-            android:textOff="@string/vegetarian"
-            android:textOn="@string/vegetarian"
-            android:textSize="16sp" />
-
-        <RadioGroup
-            android:id="@+id/radio_group_vegetarian"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/toggle_vegetarian"
-            android:layout_marginTop="11dp"
-            android:background="#dcdcdc"
-            android:paddingStart="15dp"
-            android:visibility="gone">
-
-
-        </RadioGroup>
-
-        <ToggleButton
-            android:id="@+id/toggle_allergy"
-            android:layout_width="122dp"
-            android:layout_height="36dp"
-            android:layout_below="@id/radio_group_vegetarian"
-            android:layout_marginTop="26dp"
-            android:background="@drawable/category_box_selector"
-            android:text="ToggleButton"
-            android:textOff="@string/allergy"
-            android:textOn="@string/allergy"
-            android:textSize="16sp" />
-
-        <RadioGroup
-            android:id="@+id/radio_group_allergy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/toggle_allergy"
-            android:layout_marginTop="11dp"
-            android:background="#dcdcdc"
-            android:paddingStart="15dp"
-            android:visibility="gone">
-
-        </RadioGroup>
-
-        <Button
-            android:id="@+id/button_register"
-            android:layout_width="wrap_content"
-            android:layout_height="54dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="35dp"
-            android:background="@drawable/button_recommend_restaurant"
-            android:gravity="center"
-            android:text="식당 추천 받기"
-            android:textColor="#ffffff"
-            android:textSize="19sp" />
-
-    </RelativeLayout>
 
 </RelativeLayout>

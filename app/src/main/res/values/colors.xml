@@ -16,6 +16,10 @@
 
     <color name="textColor">#ffffff</color>
 
+    <color name="textColor_category_unselected">#87000000</color>
+
+    <color name="textColor_category_selected">#ffffff</color>
+
     <color name="black">#000000</color>
 
     <color name="white">#ffffff</color>

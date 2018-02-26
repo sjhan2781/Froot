@@ -32,7 +32,7 @@ public class GradientTextView extends TextView {
                     ContextCompat.getColor(getContext(),
                             R.color.logoColor),
                     ContextCompat.getColor(getContext(),
-                            R.color.white),
+                            R.color.logoColor),
                     Shader.TileMode.CLAMP));
         }
     }
