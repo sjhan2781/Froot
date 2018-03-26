@@ -18,10 +18,14 @@
 
     <color name="textColor_category_unselected">#87000000</color>
 
+    <color name="textColor_black">#87000000</color>
+
     <color name="textColor_category_selected">#ffffff</color>
 
     <color name="black">#000000</color>
 
     <color name="white">#ffffff</color>
+
+    <color name="black_overlay">#66000000</color>
 
 </resources>
