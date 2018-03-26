@@ -2,6 +2,7 @@ package com.example.hansangjin.froot;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,7 +31,7 @@ public class ApplicationController extends Application {
     public static AccessToken facebookAccessToken = null;
     public static String kakaoAccessToken = null;
 
-    public static ApplicationController getInstance(){
+    public static ApplicationController getInstance() {
         return instance;
     }
 
@@ -52,16 +53,16 @@ public class ApplicationController extends Application {
         kakaoAccessToken = Session.getCurrentSession().getAccessToken();
     }
 
-    public static Activity getCurrentActivity(){
+    public static Activity getCurrentActivity() {
         return currentActivity;
     }
 
-    public static void setCurrentActivity(Activity activity){
+    public static void setCurrentActivity(Activity activity) {
         ApplicationController.currentActivity = activity;
     }
 
     public static ApplicationController getApplicationController() {
-        if(instance == null)
+        if (instance == null)
             throw new IllegalStateException("this application does not inherit com.kakao.GlobalApplication");
         return instance;
     }
@@ -78,34 +79,43 @@ public class ApplicationController extends Application {
     }
 
     //이미지 크기 변환
-    public static Bitmap setUpImage(int resID){
-        Log.d("density dpi", metrics.densityDpi+"");
-        Log.d("density dpi", metrics.density+"");
+    public static Bitmap setUpImage(int resID) {
+        Log.d("density dpi", metrics.densityDpi + "");
+        Log.d("density dpi", metrics.density + "");
 
 //        double ratio = (double) (metrics.density / 4);
         double ratio = (double) (metrics.densityDpi / 160) / 4;
         Bitmap bitmap = BitmapFactory.decodeResource(instance.getResources(), resID);
 
-        Log.d("ratio", ratio+"");
+        Log.d("ratio", ratio + "");
 
-        Log.d("width", bitmap.getWidth()+"");
+        Log.d("width", bitmap.getWidth() + "");
 
         int width = (int) (bitmap.getWidth() * ratio);
 
-        Log.d("cal width", bitmap.getWidth() / ratio +"");
+        Log.d("cal width", bitmap.getWidth() / ratio + "");
 
         int height = (int) (bitmap.getHeight() * ratio);
 
-        return Bitmap.createScaledBitmap(bitmap, width/2, height/2, true);
+        return Bitmap.createScaledBitmap(bitmap, width, height, true);
     }
 
     //drawable 크기 변환
-    public static Drawable setUpDrawable(int resID){
+    public static Drawable setUpDrawable(int resID) {
         Bitmap bitmap = setUpImage(resID);
 
         return new BitmapDrawable(instance.getResources(), bitmap);
     }
 
+    public static void startActivity(Activity activity, Intent intent) {
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.activity_right_in, R.anim.activity_not_move);
+    }
+
+    public static void finish(Activity activity) {
+        activity.finish();
+        activity.overridePendingTransition(R.anim.activity_not_move, R.anim.activity_right_out);
+    }
 
     @Override
     public void onTerminate() {

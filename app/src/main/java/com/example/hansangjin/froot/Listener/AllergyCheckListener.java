@@ -2,6 +2,9 @@ package com.example.hansangjin.froot.Listener;
 
 import android.widget.CompoundButton;
 
+import com.example.hansangjin.froot.Activities.RestaurantMapActivity;
+import com.example.hansangjin.froot.Adapter.CategoryExpandableListViewAdapter;
+
 import java.util.ArrayList;
 
 /**
@@ -10,9 +13,11 @@ import java.util.ArrayList;
 
 public class AllergyCheckListener implements CompoundButton.OnCheckedChangeListener {
     private ArrayList<String> selectedItem;
+    private CategoryExpandableListViewAdapter adapter;
 
-    public AllergyCheckListener() {
+    public AllergyCheckListener(CategoryExpandableListViewAdapter adapter) {
         selectedItem = new ArrayList<>();
+        this.adapter = adapter;
     }
 
     @Override
@@ -27,5 +32,9 @@ public class AllergyCheckListener implements CompoundButton.OnCheckedChangeListe
 
     public ArrayList<String> getSelectedItem(){
         return selectedItem;
+    }
+
+    public boolean isSelected(){
+        return selectedItem.isEmpty();
     }
 }

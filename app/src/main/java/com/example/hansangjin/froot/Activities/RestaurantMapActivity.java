@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
-import android.graphics.Rect;
 import android.graphics.Shader;
 import android.location.Location;
 import android.location.LocationListener;
@@ -27,6 +26,7 @@ import android.widget.TextView;
 
 import com.example.hansangjin.froot.Adapter.RestaurantMapRecyclerViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
+import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
 import com.example.hansangjin.froot.Data.Restaurant;
 import com.example.hansangjin.froot.Listener.MapMarkerClickListener;
 import com.example.hansangjin.froot.Listener.ScrollListener;
@@ -56,13 +56,13 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class RestaurantMapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener,
+public class RestaurantMapActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks, LocationListener, Runnable {
     private final int MAP_ACTIVITY_CODE = 300;
 
     private final int LOCATION_PERMISSION_REQUEST_CODE = 0;
 
-    private int permissionCheck;
+    private Intent intent;
     private boolean mLocationPermissionGranted;
 
     private ImageView toolbar_start_image, toolbar_end_image;
@@ -78,7 +78,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
     private RecyclerView recyclerView;
     private RestaurantMapRecyclerViewAdapter recyclerViewAdapter;
 
-    private ArrayList<Restaurant> restaurantList;
+    private ArrayList<ParcelableRestaurant> restaurantList;
     private ArrayList<Marker> markers;
 
     private String NAVER_CLIENT_ID;
@@ -92,7 +92,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_map);
 
-        permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+        ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
 //        permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
 
         getLocationPermission();
@@ -119,8 +119,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     public void onBackPressed() {
-        finish();
-        overridePendingTransition(R.anim.activity_not_move, R.anim.activity_right_out);
+        ApplicationController.finish(this);
     }
 
     @Override
@@ -145,10 +144,12 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void createObject() {
+        intent = getIntent();
+
         recyclerView = findViewById(R.id.restaurant_list_view);
-        toolbar_start_image = findViewById(R.id.toolbar_button_first);
+        toolbar_start_image = findViewById(R.id.toolbar_button_left);
         textView_title = findViewById(R.id.toolbar_textView_title);
-        toolbar_end_image = findViewById(R.id.toolbar_button_second);
+        toolbar_end_image = findViewById(R.id.toolbar_button_right);
 
         linearLayoutManager = new LinearLayoutManager(this);
 
@@ -158,8 +159,6 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
 
         NAVER_CLIENT_ID = getResources().getString(R.string.naver_api_client_key);
         NAVER_CLIENT_SECRET = getResources().getString(R.string.naver_api_client_secret);
-
-
     }
 
     private void setUpGoogleApiClient() {
@@ -183,9 +182,10 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
 
         toolbar_start_image.setVisibility(View.VISIBLE);
         toolbar_start_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.ic_clear_black_36dp));
+        toolbar_start_image.setOnClickListener(this);
 
-        Shader textShader=new LinearGradient(0, 0, 0, 100,
-                new int[]{Color.GREEN,Color.BLUE},
+        Shader textShader = new LinearGradient(0, 0, 0, 100,
+                new int[]{Color.GREEN, Color.BLUE},
                 new float[]{0, 1}, Shader.TileMode.CLAMP);
 
         textView_title.setVisibility(View.VISIBLE);
@@ -196,9 +196,13 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void setUpData() {
-        restaurantList.add(new Restaurant(0, "게코스 테라스"));
-        restaurantList.add(new Restaurant(1, "이태원 구월당"));
-        restaurantList.add(new Restaurant(2, "홍대개미"));
+//        restaurantList.add(new ParcelableRestaurant(0, "게코스 테라스"));
+//        restaurantList.add(new ParcelableRestaurant(1, "이태원 구월당"));
+//        restaurantList.add(new ParcelableRestaurant(2, "홍대개미"));
+
+        restaurantList = intent.getParcelableArrayListExtra("restaurants");
+
+        Log.d("asdads", restaurantList.toString());
 
         //네이버 식당 정보 검색
         try {
@@ -212,16 +216,16 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void setUpUI() {
-        int pixel = (int) (16 * ApplicationController.metrics.density);
+        final float dpi = ApplicationController.metrics.density;
 
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-                outRect.left = 32;
-                outRect.right = 32;
-            }
-        });
+//        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+//            @Override
+//            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+//                super.getItemOffsets(outRect, view, parent, state);
+////                outRect.right = (int) (5 * dpi);
+//                outRect.left = (int) (10 * dpi);
+//            }
+//        });
 
 
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -235,9 +239,6 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(recyclerViewAdapter);
 
-
-        recyclerView.setPadding(pixel * 2, 0, pixel * 2, 0);
-        recyclerView.setClipToPadding(false);   //양쪽에 아이템 살짝 보이게
     }
 
     private void setUpListener() {
@@ -245,11 +246,18 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onClick(View view, int position) {
                 Intent intent = new Intent(getApplicationContext(), RestaurantDetailActivity.class);
-                intent.putExtra("restaurant", restaurantList.get(position));
+//                intent.putExtra("restaurant", restaurantList.get(position));
                 startActivityForResult(intent, MAP_ACTIVITY_CODE);
                 overridePendingTransition(R.anim.activity_right_in, R.anim.activity_not_move);
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == toolbar_start_image){
+            ApplicationController.finish(this);
+        }
     }
 
     private void createLocationRequest() {
@@ -311,7 +319,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
 
                 restaurantList.get(position).setName(Html.fromHtml(value.getString("title")).toString());
                 restaurantList.get(position).setLink(value.getString("link"));
-                restaurantList.get(position).setCategory(value.getString("category"));
+//                restaurantList.get(position).setCategory(value.getString("category"));
                 restaurantList.get(position).setDescription(value.getString("description"));
                 restaurantList.get(position).setTelephone(value.getString("telephone"));
                 restaurantList.get(position).setAddress(value.getString("address"));
@@ -386,7 +394,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
     }
 
     public void setSelectedChild(int position) {
-        if(markers.size() != 0) {
+        if (!markers.isEmpty()) {
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(markers.get(position).getPosition()));
             setMarkers(position);
         }
@@ -413,7 +421,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
     }
 
     public void setMarkers(int position) {
-        if(position != selected_index) {
+        if (position != selected_index) {
             Marker marker = markers.get(selected_index);
 
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_facebook_login_9)));
@@ -427,8 +435,8 @@ public class RestaurantMapActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
-    public void animateCamera(int position){
-        if(position != selected_index) {
+    public void animateCamera(int position) {
+        if (position != selected_index) {
             Marker marker = markers.get(position);
 
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));

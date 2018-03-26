@@ -19,7 +19,6 @@ import com.example.hansangjin.froot.Adapter.CategoryExpandableListViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.CustomView.GradientTextView;
 import com.example.hansangjin.froot.Data.Category;
-import com.example.hansangjin.froot.Listener.AllergyCheckListener;
 import com.example.hansangjin.froot.R;
 
 import java.util.ArrayList;
@@ -31,14 +30,13 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
     private GradientTextView textView_title;
 
     private ExpandableListView categoryListView;
+    private CategoryExpandableListViewAdapter categoryExpandableListViewAdapter;
 
     private ArrayList<Category> categories;
 
     private ArrayList<String> religionList = new ArrayList<>();
     private ArrayList<String> allergyList = new ArrayList<>();
     private ArrayList<String> vegetarianList = new ArrayList<>();
-
-    private AllergyCheckListener allergyCheckListener;
 
     private static Toast toast = null;
 
@@ -63,18 +61,16 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
         register_button = findViewById(R.id.button_register);
 
         textView_title = findViewById(R.id.toolbar_textView_title);
-        exit_button = findViewById(R.id.toolbar_button_second);
+        exit_button = findViewById(R.id.toolbar_button_left);
 
         categoryListView = findViewById(R.id.expandableListView);
-
         categories = new ArrayList<>();
 
         religionList = new ArrayList<>();
         vegetarianList = new ArrayList<>();
         allergyList = new ArrayList<>();
 
-        allergyCheckListener = new AllergyCheckListener();
-
+        categoryExpandableListViewAdapter = new CategoryExpandableListViewAdapter(this, categoryListView, categories);
     }
 
     private void setUpToolbar() {
@@ -108,18 +104,10 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
 
     private void setUpUI() {
         register_button.setEnabled(false);
-        categoryListView.setAdapter(new CategoryExpandableListViewAdapter(this, categoryListView, categories));
+//        categoryExpandableListViewAdapter.notifyDataSetChanged();
+        categoryListView.setAdapter(categoryExpandableListViewAdapter);
 
-        categoryListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                for(int i = 0; i < categories.size(); i++){
-                    if(i != groupPosition){
-                        categoryListView.collapseGroup(i);
-                    }
-                }
-            }
-        });
+        categoryListView.setOnGroupExpandListener(categoryExpandableListViewAdapter);
 
 //        register_button.setBackground(ApplicationController.setUpDrawable(R.drawable.button_recommend_restaurant));
 
@@ -146,12 +134,12 @@ public class CategoryActivity extends AppCompatActivity implements CompoundButto
     @Override
     public void onClick(View v) {
         if (v == exit_button) {
-            finish();
+            Intent intent = new Intent(getApplicationContext(), RestaurantListActivity.class);
+            ApplicationController.startActivity(this, intent);
         } else if (v == register_button) {
-
-            startActivity(new Intent(getApplicationContext(), RestaurantMapActivity.class));
-            overridePendingTransition(R.anim.activity_right_in, R.anim.activity_not_move);
-
+            Intent intent = new Intent(getApplicationContext(), RestaurantListActivity.class);
+            intent.putExtra("category_type",  categoryExpandableListViewAdapter.getSelectedCategory().getType());
+            ApplicationController.startActivity(this, intent);
         }
 
     }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hansangjin.froot.Activities.RestaurantMapActivity">
+    tools:context="com.example.hansangjin.froot.Activities.RestaurantMapActivity"
+    android:clipChildren="false">
 
     <include
         android:id="@+id/toolbar"
@@ -22,12 +23,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        android:nestedScrollingEnabled="true"
+        android:layout_marginBottom="25dp"
+        android:foregroundGravity="center"
         android:orientation="horizontal"
-        android:scrollbars="horizontal"
-        android:splitMotionEvents="true"
-        app:layoutManager="LinearLayoutManager" />
+        android:clipToPadding="false"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        app:layoutManager="LinearLayoutManager"
+        android:clipChildren="false" />
 
 
 

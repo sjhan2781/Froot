@@ -65,6 +65,10 @@ dependencies {
     //flow layout
     implementation 'com.nex3z:flow-layout:1.1.0'
 
+    //slidingup panel
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'

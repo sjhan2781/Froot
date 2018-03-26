@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void setUpUI(){
 
 
-        image_exit.setImageBitmap(setUpImage(R.drawable.button_exit_2));
+//        image_exit.setImageBitmap(setUpImage(R.drawable.button_exit_2));
         image_facebook.setImageBitmap(setUpImage(R.drawable.button_facebook_login_9));
         image_kakao.setImageBitmap(setUpImage(R.drawable.button_kakao_login_11));
         image_google.setImageBitmap(setUpImage(R.drawable.button_google_login_10));

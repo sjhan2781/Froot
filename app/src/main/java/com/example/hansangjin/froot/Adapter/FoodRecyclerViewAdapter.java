@@ -1,11 +1,11 @@
 package com.example.hansangjin.froot.Adapter;
 
-import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.hansangjin.froot.Activities.RestaurantDetailActivity;
@@ -48,23 +48,31 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
         final int curPos = position;
 
         holder.textView_food_name.setText(foods.get(position).getName());
+        holder.textView_food_price.setText(String.valueOf(foods.get(position).getPrice()) + "원");
+//        holder.imageView_food.setImageBitmap();
 
-        if (getSelectedPos() == position){
-            holder.itemView.setBackgroundColor(activity.getResources().getColor(R.color.logoColor));
-        }
-        else{
-            holder.itemView.setBackgroundColor(Color.WHITE);
-        }
+        if (foods.get(position).isPossible()) {
+            holder.imageView_food_enable.setVisibility(View.VISIBLE);
+        }else{
+            holder.imageView_food_enable.setVisibility(View.INVISIBLE);
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notifyItemChanged(selectedPos);
-                selectedPos = curPos;
-                activity.setSelectedFood(foods.get(curPos));
-                notifyItemChanged(selectedPos);
-            }
-        });
+        }
+//        if (getSelectedPos() == position){
+//            holder.itemView.setBackgroundColor(activity.getResources().getColor(R.color.logoColor));
+//        }
+//        else{
+//            holder.itemView.setBackgroundColor(Color.WHITE);
+//        }
+
+//        holder.cardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                notifyItemChanged(selectedPos);
+//                selectedPos = curPos;
+//                activity.setSelectedFood(foods.get(curPos));
+//                notifyItemChanged(selectedPos);
+//            }
+//        });
 
 
     }
@@ -77,13 +85,17 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         public CardView cardView;
-        public TextView textView_food_name;
+        public TextView textView_food_name, textView_food_price;
+        public ImageView imageView_food, imageView_food_enable;
 
         public MyViewHolder(View parent) {
             super(parent);
 
             cardView = parent.findViewById(R.id.cardView_food);
             textView_food_name = parent.findViewById(R.id.textView_food_name);
+            textView_food_price = parent.findViewById(R.id.textView_price);
+            imageView_food = parent.findViewById(R.id.imageView_food);
+            imageView_food_enable = parent.findViewById(R.id.imageView_food_enable);
         }
     }
 }

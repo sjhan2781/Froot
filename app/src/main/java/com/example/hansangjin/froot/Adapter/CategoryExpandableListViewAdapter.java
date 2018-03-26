@@ -28,19 +28,15 @@ import java.util.ArrayList;
  */
 
 public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter implements
-        CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener, ExpandableListView.OnGroupExpandListener {
+        CompoundButton.OnCheckedChangeListener, ExpandableListView.OnGroupExpandListener {
     private ArrayList<Category> categories = null;
     private CategoryActivity activity = null;
     private LayoutInflater inflater = null;
-    private ArrayList<RadioGroup> categoryGroups = null;
+    private ArrayList<RadioGroup> radioGroups = null;
     private ArrayList<CheckBox> allergyCheckBoxes = null;
+    private ArrayList<String> selectedItem = null;
 
-    private enum CATEGORY_TYPE {TYPE_RELIGION, TYPE_VEGETARIAN, TYPE_ALLERGY}
-
-    private static final int TYPE_RELIGION = 0;
-    private static final int TYPE_VEGETARIAN = 1;
-    private static final int TYPE_ALLERGY = 2;
-    private static int SELECTED_TYPE = -1;
+    private static int SELECTED_TYPE;
 
     private ExpandableListView expandableListView;
 
@@ -49,8 +45,9 @@ public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter
         this.categories = categories;
         this.expandableListView = parent;
         this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.categoryGroups = new ArrayList<>();
+        this.radioGroups = new ArrayList<>();
         this.allergyCheckBoxes = new ArrayList<>();
+        this.selectedItem = new ArrayList<>();
     }
 
     @Override
@@ -102,6 +99,14 @@ public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter
             backgroundColor = activity.getResources().getColor(R.color.logoColor);
             textColor = activity.getResources().getColor(R.color.textColor_category_selected);
             indicatorBitmap = ApplicationController.setUpImage(R.drawable.ic_keyboard_arrow);
+
+            for (RadioGroup radioGroup : radioGroups){
+                radioGroup.clearCheck();
+            }
+            for (CheckBox checkBox : allergyCheckBoxes){
+                checkBox.setChecked(false);
+            }
+
         } else {
             backgroundColor = activity.getResources().getColor(R.color.white);
             textColor = activity.getResources().getColor(R.color.textColor_category_unselected);
@@ -125,20 +130,18 @@ public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter
         RadioGroup radioGroup;
         int groupType = getGroupType(groupPosition);
 
-
         if (convertView == null || (int) convertView.getTag() != groupType) {
             convertView = inflater.inflate(R.layout.itemview_child_list, parent, false);
 
             radioGroup = convertView.findViewById(R.id.radioGroup);
             radioGroup.setTag(groupType);
-            categoryGroups.add(radioGroup);
 
             switch (groupType) {
-                case TYPE_RELIGION:
-                case TYPE_VEGETARIAN:
+                case 0:
+                case 1:
                     convertView.setTag(groupType);
 
-                    for (int i = 0; i < categories.get(groupPosition).getLists().size(); i++) {
+                    for (int i = 0; i < categories.get(groupType).getLists().size(); i++) {
                         RadioButton radioButton = new RadioButton(activity);
                         LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(
                                 RadioGroup.LayoutParams.MATCH_PARENT,
@@ -146,13 +149,14 @@ public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter
 
                         radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                         radioButton.setText((String) getChild(groupPosition, i));
+                        radioButton.setId(i);
 
-//                        radioButton.setOnCheckedChangeListener();
-                        radioGroup.setOnCheckedChangeListener(this);
-                        radioGroup.addView(radioButton, i, layoutParams);
+                        radioButton.setOnCheckedChangeListener(this);
+                        radioGroup.addView(radioButton, layoutParams);
                     }
+                    radioGroups.add(radioGroup);
                     break;
-                case TYPE_ALLERGY:
+                case 2:
                     convertView.setTag(groupType);
 
                     for (int i = 0; i < categories.get(groupPosition).getLists().size(); i++) {
@@ -163,21 +167,16 @@ public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter
 
                         checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                         checkBox.setText((String) getChild(groupPosition, i));
+                        checkBox.setId(i);
 
                         allergyCheckBoxes.add(checkBox);
 
-//                    checkBox.setOnCheckedChangeListener();
-                        radioGroup.addView(checkBox, i, layoutParams);
+                        checkBox.setOnCheckedChangeListener(this);
+                        radioGroup.addView(checkBox, layoutParams);
                     }
                     break;
                 default:
                     break;
-            }
-        }
-
-        for (RadioGroup tmpGroup : categoryGroups){
-            if ((int)tmpGroup.getTag() != groupType){
-                tmpGroup.clearCheck();
             }
         }
 
@@ -196,42 +195,35 @@ public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter
 
     @Override
     public int getGroupTypeCount() {
-        return CATEGORY_TYPE.values().length;
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        boolean isEnable = false;
-        if (group.getCheckedRadioButtonId() != -1) {
-            isEnable = true;
-        }
-        activity.setRegisterEnable(isEnable);
+        return 3;
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+        if (isChecked) {
+            selectedItem.add(buttonView.getText().toString());
+        } else {
+            selectedItem.remove(buttonView.getText().toString());
+        }
+        setRegisterButtonEnable();
     }
 
     @Override
     public void onGroupExpand(int groupPosition) {
-        for(int i = 0; i < categories.size(); i++){
-            if(i != groupPosition){
+        for (int i = 0; i < categories.size(); i++) {
+            if (i != groupPosition) {
                 expandableListView.collapseGroup(i);
             }
         }
         SELECTED_TYPE = categories.get(groupPosition).getType();
     }
 
-    public void getSelectedCategory(){
-        ArrayList<String> selectedCategory = new ArrayList<>();
+    public void setRegisterButtonEnable() {
+        activity.setRegisterEnable(!selectedItem.isEmpty());
+    }
 
-        switch (SELECTED_TYPE){
-            case TYPE_RELIGION:
-//                selectedCategory.add(categories)
-            case TYPE_VEGETARIAN:
-            case TYPE_ALLERGY:
-                break;
-        }
+    public Category getSelectedCategory() {
+        return new Category(categories.get(SELECTED_TYPE).getCategory(), SELECTED_TYPE, selectedItem);
     }
 }

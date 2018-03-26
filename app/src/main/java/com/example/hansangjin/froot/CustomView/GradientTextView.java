@@ -10,11 +10,9 @@ import android.widget.TextView;
 
 import com.example.hansangjin.froot.R;
 
-/**
- * Created by hansangjin on 2018. 2. 21..
- */
 
-public class GradientTextView extends TextView {
+
+public class GradientTextView extends TextView{
     public GradientTextView(Context context) {
         super(context);
     }
@@ -30,9 +28,9 @@ public class GradientTextView extends TextView {
         if (changed) {
             getPaint().setShader(new LinearGradient(0, 0, getWidth(), 0,
                     ContextCompat.getColor(getContext(),
-                            R.color.logoColor),
+                            R.color.white),
                     ContextCompat.getColor(getContext(),
-                            R.color.logoColor),
+                            R.color.white),
                     Shader.TileMode.CLAMP));
         }
     }

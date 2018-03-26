@@ -59,14 +59,15 @@ public class RestaurantInfoActivity extends AppCompatActivity {
 
     private void setUpToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        ImageView toolbar_start_image = findViewById(R.id.toolbar_button_first);
+        ImageView toolbar_start_image = findViewById(R.id.toolbar_button_left);
         GradientTextView textView_title = findViewById(R.id.toolbar_textView_title);
-        ImageView toolbar_end_image = findViewById(R.id.toolbar_button_second);
+        ImageView toolbar_end_image = findViewById(R.id.toolbar_button_right);
 
         setSupportActionBar(toolbar);
-        toolbar_start_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.button_exit_2));
+//        toolbar_start_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.button_exit_2));
         textView_title.setText("맞춤 식당");
-        toolbar_end_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.button_exit_2));    }
+//        toolbar_end_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.button_exit_2));
+ }
 
     private void setUpData() {
         restaurant_features.add("할랄인증");

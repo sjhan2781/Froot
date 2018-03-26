@@ -24,8 +24,10 @@ public class ScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 
-        if(recyclerView.getScrollState() == RecyclerView.SCROLL_INDICATOR_RIGHT){
+        if(recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE){
             recyclerView.smoothScrollToPosition(selected_position);
+//            activity.setSelectedChild(selected_position);
+
         }
 //        Log.d("ScrollState", newState + "");
 

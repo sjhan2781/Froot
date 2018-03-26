@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * Created by hansangjin on 2018. 1. 18..
@@ -15,24 +16,24 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
     private int ID;
     private String name;
     private String link;
-    private String category;
+    private int category;
     private String description;
     private String telephone;
     private String address;
     private double distance;
     private double mapx;
     private double mapy;
+    private ArrayList<Food> foods;
 
     public Restaurant() {
+        foods = new ArrayList<>();
     }
 
-    public Restaurant(String name) {
-        this.name = name;
-    }
-
-    public Restaurant(int ID, String name) {
+    public Restaurant(int ID, String name, int category) {
         this.ID = ID;
         this.name = name;
+        this.category = category;
+        foods = new ArrayList<>();
     }
 
     public int getID() {
@@ -59,11 +60,11 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
         this.link = link;
     }
 
-    public String getCategory() {
+    public int getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(int category) {
         this.category = category;
     }
 
@@ -113,6 +114,14 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
 
     public void setDistance(double distance) {
         this.distance = distance;
+    }
+
+    public ArrayList<Food> getFoods() {
+        return foods;
+    }
+
+    public void setFoods(ArrayList<Food> foods) {
+        this.foods = foods;
     }
 
     public String getConversionDistance(){
