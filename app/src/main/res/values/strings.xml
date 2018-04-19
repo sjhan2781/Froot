@@ -17,9 +17,17 @@
     <!--카카오 로그인-->
     <string name="kakao_app_key" translatable="false">6c60440944e2d965b50222cbad72d7a0</string>
 
-    <!--API 관-->
+    <!--API 관련-->
+
+    <!--imageView Description-->
+    <string name="intro_alpha_description">intro background alpha</string>
+    <string name="intro_logo_description">intro logo</string>
+    <string name="horizontal_line">horizontal line</string>
+    <!--imageView Description-->
+
 
     <!--UI 관련-->
+    <string name="intro_text" translatable="false">What\'s in your food?</string>
     <string name="text_divider" translatable="false">|</string>
     <!--UI 관련-->
 

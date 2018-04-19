@@ -4,16 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_background_1_large"
+    android:background="@drawable/intro_background"
     tools:context="com.example.hansangjin.froot.Activities.SplashActivity">
 
-    <Button
-        android:id="@+id/button_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="false"
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/intro_alpha_description"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/intro_background_alpha" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="188dp"
+        android:layout_height="51dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="next" />
+        android:contentDescription="@string/intro_logo_description"
+        app:srcCompat="@drawable/intro_logo" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/logo"
+        android:layout_alignEnd="@+id/logo"
+        android:layout_alignStart="@+id/logo"
+        android:text="@string/intro_text"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 </RelativeLayout>

@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.R;
@@ -19,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
+public class SplashActivity extends AppCompatActivity {
     Handler handler = new Handler();
 
     Class nextActivity;
@@ -40,7 +39,15 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
 
         getHashKey();
 
-        findViewById(R.id.button_start).setOnClickListener(this);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
+                ApplicationController.startActivity(SplashActivity.this, intent);
+                finish();
+            }
+        },2000);
 
 //        handler.postDelayed(new Runnable() {
 //            @Override
@@ -89,20 +96,6 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.button_start:
-                nextActivity = CategoryActivity.class;
-
-                Intent intent = new Intent(SplashActivity.this, nextActivity);
-                startActivity(intent);          //다음 액티비티로 전환
-                overridePendingTransition(R.anim.activity_right_in,R.anim.activity_not_move);
-
-                finish();   //현재 액티비티를 종료
-                break;
-        }
-    }
 
     private void getHashKey() {
         try {

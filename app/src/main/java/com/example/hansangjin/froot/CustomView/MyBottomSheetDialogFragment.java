@@ -11,6 +11,7 @@ import android.widget.GridView;
 
 import com.example.hansangjin.froot.Activities.RestaurantListActivity;
 import com.example.hansangjin.froot.Adapter.LocationGridViewAdapter;
+import com.example.hansangjin.froot.ParcelableData.ParcelableLocation;
 import com.example.hansangjin.froot.R;
 
 import java.util.ArrayList;
@@ -18,14 +19,14 @@ import java.util.ArrayList;
 public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment implements View.OnClickListener{
     private Button button;
     private GridView location_gridView;
-    private ArrayList<String> locations;
+    private ArrayList<ParcelableLocation> locations;
     private LocationGridViewAdapter adapter;
 
-    public static MyBottomSheetDialogFragment newInstance(ArrayList<String> locationList) {
+    public static MyBottomSheetDialogFragment newInstance(ArrayList<ParcelableLocation> locationList) {
         MyBottomSheetDialogFragment f = new MyBottomSheetDialogFragment();
         Bundle args = new Bundle();
 //        args.putString("string", string);
-        args.putStringArrayList("locations", locationList);
+        args.putParcelableArrayList("locations", locationList);
         f.setArguments(args);
 
 
@@ -35,7 +36,7 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment imple
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        locations = getArguments().getStringArrayList("locations");
+        locations = getArguments().getParcelableArrayList("locations");
     }
 
     @Override
@@ -46,7 +47,7 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment imple
         button = v.findViewById(R.id.button);
         location_gridView = v.findViewById(R.id.gridView);
 
-        locations = getArguments().getStringArrayList("locations");
+        locations = getArguments().getParcelableArrayList("locations");
 
         adapter = new LocationGridViewAdapter(locations, this);
         button.setOnClickListener(this);

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#cccccc">
+    android:background="#ffffff">
 
     <TextView
         android:id="@+id/textView"
@@ -17,6 +17,13 @@
         android:textColor="@color/textColor_black"
         android:textSize="18sp" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/textView"
+        android:src="@drawable/horizontal_line"
+        android:contentDescription="@string/horizontal_line"/>
+
     <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
@@ -29,12 +36,9 @@
         android:choiceMode="singleChoice"
         android:gravity="center"
         android:horizontalSpacing="16dp"
-        android:layoutDirection="locale"
-        android:layoutMode="clipBounds"
         android:numColumns="2"
-        android:scrollIndicators="none"
         android:scrollbars="none"
-        android:verticalSpacing="15dp" />
+        android:verticalSpacing="7dp" />
 
     <Button
         android:id="@+id/button"

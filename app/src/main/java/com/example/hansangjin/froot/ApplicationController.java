@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import com.example.hansangjin.froot.Kakao.KakaoSDKAdapter;
 import com.facebook.AccessToken;
@@ -44,6 +43,8 @@ public class ApplicationController extends Application {
     public void onCreate() {
         super.onCreate();
         ApplicationController.instance = this;
+
+        metrics = getApplicationContext().getResources().getDisplayMetrics();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
@@ -80,20 +81,9 @@ public class ApplicationController extends Application {
 
     //이미지 크기 변환
     public static Bitmap setUpImage(int resID) {
-        Log.d("density dpi", metrics.densityDpi + "");
-        Log.d("density dpi", metrics.density + "");
-
-//        double ratio = (double) (metrics.density / 4);
         double ratio = (double) (metrics.densityDpi / 160) / 4;
         Bitmap bitmap = BitmapFactory.decodeResource(instance.getResources(), resID);
-
-        Log.d("ratio", ratio + "");
-
-        Log.d("width", bitmap.getWidth() + "");
-
         int width = (int) (bitmap.getWidth() * ratio);
-
-        Log.d("cal width", bitmap.getWidth() / ratio + "");
 
         int height = (int) (bitmap.getHeight() * ratio);
 

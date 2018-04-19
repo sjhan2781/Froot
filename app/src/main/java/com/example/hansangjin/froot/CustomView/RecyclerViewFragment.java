@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.example.hansangjin.froot.Activities.RestaurantListActivity;
 import com.example.hansangjin.froot.Adapter.RestaurantListRecycleViewAdapter;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
+import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurantType;
 import com.example.hansangjin.froot.R;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 public class RecyclerViewFragment extends Fragment {
     ArrayList<ParcelableRestaurant> restaurants;
+    ArrayList<ParcelableRestaurantType> restaurantTypes;
 
     @Nullable
     @Override
@@ -28,8 +30,13 @@ public class RecyclerViewFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView_restaurant);
 
         restaurants = getArguments().getParcelableArrayList("restaurants");
+        restaurantTypes = getArguments().getParcelableArrayList("restaurantTypes");
 
-       recyclerView.setAdapter(new RestaurantListRecycleViewAdapter((RestaurantListActivity) getActivity(), restaurants));
+        if (!restaurants.isEmpty()){
+            view.setBackground(null);
+        }
+
+       recyclerView.setAdapter(new RestaurantListRecycleViewAdapter((RestaurantListActivity) getActivity(), restaurants, restaurantTypes));
 
         return view;
     }

@@ -1,6 +1,7 @@
 package com.example.hansangjin.froot.Activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -9,30 +10,49 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.hansangjin.froot.Adapter.CustomPagerAdapter;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.BackPressCloseHandler;
-import com.example.hansangjin.froot.CustomView.GradientTextView;
 import com.example.hansangjin.froot.CustomView.MyBottomSheetDialogFragment;
 import com.example.hansangjin.froot.CustomView.RecyclerViewFragment;
+import com.example.hansangjin.froot.Data.Location;
+import com.example.hansangjin.froot.Data.Restaurant;
+import com.example.hansangjin.froot.Data.RestaurantType;
+import com.example.hansangjin.froot.ParcelableData.ParcelableLocation;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
+import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurantType;
 import com.example.hansangjin.froot.R;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class RestaurantListActivity extends AppCompatActivity implements View.OnClickListener, TabHost.OnTabChangeListener {
     private ImageView toolbar_left_image, toolbar_right_image, drop_down_image;
-    private GradientTextView textView_title;
+    private TextView textView_title;
 
     private Intent intent;
-    private int type;
     private ArrayList<ParcelableRestaurant> restaurantList;
-    private ArrayList<String> kindList;
-    private ArrayList<String> locationList;
+    private ArrayList<ParcelableRestaurantType> restaurantTypeList;
+    private ArrayList<ParcelableLocation> locationList;
 
     private View bottomSheet;
     private BottomSheetBehavior behavior;
@@ -40,22 +60,15 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
 
     private BackPressCloseHandler backPressCloseHandler;
 
+    private Toast toast;
+
+    private Locale locale;
+    private String locale_str;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        intent = getIntent();
-        type = intent.getIntExtra("category_type", -1);
-
-        switch (type) {
-            case 0:
-                setContentView(R.layout.activity_restaurant_list_religion);
-                break;
-            case 1:
-            case 2:
-            default:
-                setContentView(R.layout.activity_restaurant_list);
-                break;
-        }
+        setContentView(R.layout.activity_restaurant_list);
 
         init();
     }
@@ -63,90 +76,81 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
     private void init() {
         creatObjects();
         setUpData();
-        setUpUI();
     }
 
     private void creatObjects() {
+        toolbar_left_image = findViewById(R.id.toolbar_button_left);
+        toolbar_right_image = findViewById(R.id.toolbar_button_right);
+        bottomSheet = findViewById(R.id.design_bottom_sheet);
+        textView_title = findViewById(R.id.toolbar_textView_title);
+        drop_down_image = findViewById(R.id.imageView_drop_down);
+
         restaurantList = new ArrayList<>();
-        kindList = new ArrayList<>();
+        restaurantTypeList = new ArrayList<>();
         locationList = new ArrayList<>();
 
         myBottomSheet = MyBottomSheetDialogFragment.newInstance(locationList);
 
         backPressCloseHandler = new BackPressCloseHandler(this);
+
+        locale = getResources().getConfiguration().locale;
+        Log.d("language", locale.getLanguage());
+
+        if (locale.getLanguage().equals("ko")){
+            locale_str = "ko";
+        }
+        else if (locale.getLanguage().equals("ja")){
+            locale_str = "ja";
+        }
+        else if (locale.getLanguage().equals("rCN")){
+            locale_str = "rCN";
+        }
+        else if (locale.getLanguage().equals("rTW")){
+            locale_str = "rTW";
+        }
+        else {
+            locale_str = "en";
+        }
     }
 
     private void setUpData() {
-        restaurantList.add(new ParcelableRestaurant(0, "게코스 테라스", 1));
-        restaurantList.add(new ParcelableRestaurant(1, "구월당", 2));
-        restaurantList.add(new ParcelableRestaurant(2, "adsasd", 2));
-        restaurantList.add(new ParcelableRestaurant(3, "ffffff", 3));
 
-        kindList.add("전체");
-        kindList.add("한식");
-        kindList.add("중식");
-        kindList.add("일식");
-        kindList.add("양식");
-        kindList.add("세계음식");
-
-        locationList.add("인사동");
-        locationList.add("명동");
-        locationList.add("홍대");
-        locationList.add("이태원");
-        locationList.add("강남");
+        getData("http://froot.iptime.org:8080/restaurantList_activity.php");
 
     }
 
     private void setUpUI() {
-        setUpToolbar(type);
-
-        if (type != 0) {
-            setUpTabView();
-        }
-
+        setUpToolbar();
+        setUpToast();
+        setUpTabView();
     }
 
-    private void setUpToolbar(int type) {
+    private void setUpToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar_left_image = findViewById(R.id.toolbar_button_left);
-        textView_title = findViewById(R.id.toolbar_textView_title);
-        toolbar_right_image = findViewById(R.id.toolbar_button_right);
-        drop_down_image = findViewById(R.id.imageView_drop_down);
+        behavior = BottomSheetBehavior.from(bottomSheet);
+        setLocation(0);
 
-        switch (type) {
-            case 0:
-                textView_title.setBackground(ApplicationController.setUpDrawable(R.drawable.image_logo));
-                break;
-            case 1:
-            case 2:
-            default:
-                bottomSheet = findViewById(R.id.design_bottom_sheet);
-                behavior = BottomSheetBehavior.from(bottomSheet);
-                setLocation(0);
-                drop_down_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.ic_arrow_drop_down_black_24dp));
-                drop_down_image.setVisibility(View.VISIBLE);
-                drop_down_image.setOnClickListener(this);
-                textView_title.setOnClickListener(this);
-                break;
-        }
-
+        drop_down_image.setVisibility(View.VISIBLE);
         textView_title.setVisibility(View.VISIBLE);
+
+        drop_down_image.setOnClickListener(this);
+        textView_title.setOnClickListener(this);
+
         toolbar_left_image.setVisibility(View.VISIBLE);
-        toolbar_left_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.ic_account_circle_black_36dp));
+        toolbar_left_image.setImageResource(R.drawable.ic_account_circle_black_36dp);
         toolbar_left_image.setOnClickListener(this);
         toolbar_right_image.setVisibility(View.VISIBLE);
-        toolbar_right_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.ic_place_black_36dp));
+        toolbar_right_image.setImageResource(R.drawable.ic_place_black_36dp);
         toolbar_right_image.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v) {
         if (v == toolbar_right_image) {
             intent = new Intent(this, RestaurantMapActivity.class);
-            intent.putExtra("restaurants", restaurantList);
+//            intent.putExtra("restaurants", restaurantList);
             ApplicationController.startActivity(this, intent);
         } else if (v == toolbar_left_image) {
             ApplicationController.finish(this);
@@ -159,8 +163,6 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-//        ApplicationController.finish(this);
         backPressCloseHandler.onBackPressed();
     }
 
@@ -180,11 +182,12 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
         Bundle bundle = new Bundle();
 
         bundle.putParcelableArrayList("restaurants", restaurantList);
+        bundle.putParcelableArrayList("restaurantTypes", restaurantTypeList);
         fragment.setArguments(bundle);
 
-        viewPagerAdapter.addFragment(fragment, kindList.get(0));
+        viewPagerAdapter.addFragment(fragment, restaurantTypeList.get(0).getType());
 
-        for (int i = 1; i < kindList.size(); i++) {
+        for (int i = 1; i < restaurantTypeList.size(); i++) {
             fragment = new RecyclerViewFragment();
             bundle = new Bundle();
             restaurants = new ArrayList<>();
@@ -196,9 +199,10 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
             }
 
             bundle.putParcelableArrayList("restaurants", restaurants);
+            bundle.putParcelableArrayList("restaurantTypes", restaurantTypeList);
             fragment.setArguments(bundle);
 
-            viewPagerAdapter.addFragment(fragment, kindList.get(i));
+            viewPagerAdapter.addFragment(fragment, restaurantTypeList.get(i).getType());
         }
 
         viewPager.setAdapter(viewPagerAdapter);
@@ -206,8 +210,151 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
     }
 
     public void setLocation(int position) {
-        textView_title.setText(locationList.get(position));
+        textView_title.setText(locationList.get(position).getLocation());
     }
 
+    private void setUpToast() {
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.layout_toast));
+        TextView textView = view.findViewById(R.id.textView_toast);
+        toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+        textView.setText("한번 더 누르시면 종료됩니다");
+        toast.setView(view);
+
+        backPressCloseHandler.setToast(toast);
+    }
+
+    public void getData(String url) {
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String uri = params[0];
+
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setReadTimeout(5000);
+                    con.setConnectTimeout(10000);
+                    con.setUseCaches(false); // 캐시 사용 안 함
+                    con.setRequestMethod("POST");
+                    con.setDoOutput(true);
+                    con.setDoInput(true);
+                    con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                    OutputStream os = con.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8")); //캐릭터셋 설정
+                    writer.write("lang=" + locale_str); //요청 파라미터를 입력
+                    writer.flush();
+                    writer.close();
+                    os.close();
+
+                    con.connect();
+
+                    int retCode = con.getResponseCode();
+
+                    Log.d("ResponseCode", retCode + "");
+
+                    StringBuilder sb = new StringBuilder();
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    String json;
+                    while ((json = bufferedReader.readLine()) != null) {
+                        sb.append(json + "\n");
+                    }
+
+                    return sb.toString().trim();
+
+                } catch (Exception e) {
+                    return null;
+                }
+
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                Log.d("result", result);
+                setLists(result);
+            }
+        }
+        GetDataJSON g = new GetDataJSON();
+        g.execute(url);
+    }
+
+    private void setLists(String strJSON) {
+        try {
+            JSONObject jsonObj = new JSONObject(strJSON);
+
+            JSONArray jsonArray = jsonObj.getJSONArray("location");
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject c = jsonArray.getJSONObject(i);
+                int id = c.getInt("location_id");
+                String location_str = c.getString("location_str");
+
+                locationList.add(new ParcelableLocation(new Location(id, location_str)));
+            }
+
+           jsonArray = jsonObj.getJSONArray("category");
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject c = jsonArray.getJSONObject(i);
+                int id = c.getInt("category_id");
+                String category_str = c.getString("category_str");
+
+                restaurantTypeList.add(new ParcelableRestaurantType(new RestaurantType(id, category_str)));
+            }
+
+            jsonArray = jsonObj.getJSONArray("restaurant");
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject c = jsonArray.getJSONObject(i);
+//                int id = ;
+//                String name = c.getString("restaurant_str");
+//                int category_id = c.getInt("category");
+//                String address = c.getString("address");
+//                String telephone = c.getString("telephone");
+//                int mapx = c.getInt("lat");
+//                int mapy = c.getInt("lng");
+//                int halal = c.getInt("halal");
+//                String image_base64 = c.getString("image_base64");
+
+                Restaurant restaurant = new Restaurant();
+                restaurant.setID(c.getInt("restaurant_id"));
+                restaurant.setName(c.getString("restaurant_str"));
+                restaurant.setCategory(c.getInt("category"));
+                restaurant.setAddress(c.getString("address"));
+                restaurant.setTelephone(c.getString("telephone"));
+                restaurant.setMapx(c.getInt("lat"));
+                restaurant.setMapy( c.getInt("lng"));
+                restaurant.setHalal(c.getInt("halal"));
+                restaurant.setImage_base64(c.getString("image_base64"));
+
+                restaurantList.add(new ParcelableRestaurant(restaurant));
+            }
+
+            setUpUI();
+
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void showToast() {
+        if (toast != null) {
+            toast.show();
+        }
+    }
+
+    public void dismissToast() {
+        if (toast != null) {
+            toast.cancel();
+        }
+    }
 
 }

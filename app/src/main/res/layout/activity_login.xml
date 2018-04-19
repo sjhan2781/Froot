@@ -40,7 +40,7 @@
             android:layout_marginTop="40dp"
             android:contentDescription="@string/app_name"
             android:textColor="@color/colorPrimaryDark"
-            android:src="@drawable/logo_3"
+            android:src="@drawable/logo"
             />
 
         <RelativeLayout

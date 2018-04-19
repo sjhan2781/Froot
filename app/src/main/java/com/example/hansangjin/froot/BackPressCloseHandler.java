@@ -1,6 +1,7 @@
 package com.example.hansangjin.froot;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.Toast;
 
 /**
@@ -9,9 +10,10 @@ import android.widget.Toast;
 
 public class BackPressCloseHandler {
     private long backKeyPressedTime = 0;
-    private Toast toast;
 
     private Activity activity;
+
+    private Toast toast;
 
     public BackPressCloseHandler(Activity context) {
         this.activity = context;
@@ -24,20 +26,28 @@ public class BackPressCloseHandler {
             return;
         }
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
-            toast.cancel();
-
+//            toast.cancel();
 //            Intent t = new Intent(activity, MainActivity.class);
 //            activity.startActivity(t);
 
-            activity.moveTaskToBack(true);
-            activity.finish();
+//            activity.moveTaskToBack(true);
+//            activity.finish();
+            activity.finishAffinity();
             android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
 
     public void showGuide() {
-        toast = Toast.makeText(activity, "한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
-        toast.show();
+        Toast ToastMessage = Toast.makeText(activity,"Change Toast Background color",Toast.LENGTH_SHORT);
+        View toastView = ToastMessage.getView();
+        toastView.setBackgroundResource(R.color.toast_background_color);
+        ToastMessage.show();
+
+//        toast.show();
+    }
+
+    public void setToast(Toast toast){
+        this.toast = toast;
     }
 
 }

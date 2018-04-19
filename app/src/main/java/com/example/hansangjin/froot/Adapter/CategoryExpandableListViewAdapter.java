@@ -28,7 +28,7 @@ import java.util.ArrayList;
  */
 
 public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter implements
-        CompoundButton.OnCheckedChangeListener, ExpandableListView.OnGroupExpandListener {
+        CompoundButton.OnCheckedChangeListener, ExpandableListView.OnGroupExpandListener, ExpandableListView.OnGroupCollapseListener {
     private ArrayList<Category> categories = null;
     private CategoryActivity activity = null;
     private LayoutInflater inflater = null;
@@ -96,9 +96,9 @@ public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter
         }
 
         if (isExpanded) {
-            backgroundColor = activity.getResources().getColor(R.color.logoColor);
+            backgroundColor = activity.getResources().getColor(R.color.colorAccent);
             textColor = activity.getResources().getColor(R.color.textColor_category_selected);
-            indicatorBitmap = ApplicationController.setUpImage(R.drawable.ic_keyboard_arrow);
+            indicatorBitmap = ApplicationController.setUpImage(R.drawable.ic_keyboard_arrow_left_black_1);
 
             for (RadioGroup radioGroup : radioGroups){
                 radioGroup.clearCheck();
@@ -110,7 +110,7 @@ public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter
         } else {
             backgroundColor = activity.getResources().getColor(R.color.white);
             textColor = activity.getResources().getColor(R.color.textColor_category_unselected);
-            indicatorBitmap = ApplicationController.setUpImage(R.drawable.ic_keyboard_arrow_left);
+            indicatorBitmap = ApplicationController.setUpImage(R.drawable.ic_keyboard_arrow_left_black_24dp);
         }
 
         TextView textView = convertView.findViewById(R.id.textView_category);
@@ -216,7 +216,19 @@ public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter
                 expandableListView.collapseGroup(i);
             }
         }
+
+        if(groupPosition == 2){
+            activity.showToast();
+        }
+
         SELECTED_TYPE = categories.get(groupPosition).getType();
+    }
+
+    @Override
+    public void onGroupCollapse(int groupPosition) {
+        if(groupPosition == 2){
+            activity.dismissToast();
+        }
     }
 
     public void setRegisterButtonEnable() {

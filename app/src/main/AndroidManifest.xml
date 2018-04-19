@@ -80,6 +80,8 @@
         <activity
             android:name=".Activities.RestaurantInfoActivity"
             tools:ignore="InnerclassSeparator" />
+        <activity android:name=".Activities.ReligionRestaurantActivity" />
+        <activity android:name=".Activities.HalalExplainActivity"></activity>
     </application>
 
 </manifest>

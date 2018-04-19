@@ -19,12 +19,13 @@
     <!-- this is where arrow will be at -->
 
     <ImageView
+        android:id="@+id/indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="22dp"
         android:layout_centerVertical="true"
-        android:id="@+id/indicator"/>
+        />
 
 
 </RelativeLayout>

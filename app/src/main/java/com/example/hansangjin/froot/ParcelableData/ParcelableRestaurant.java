@@ -19,22 +19,28 @@ public class ParcelableRestaurant extends Restaurant implements Parcelable {
         super.setID(restaurant.getID());
         super.setAddress(restaurant.getAddress());
         super.setCategory(restaurant.getCategory());
-        super.setDescription(restaurant.getDescription());
         super.setDistance(restaurant.getDistance());
         super.setFoods(restaurant.getFoods());
-        super.setLink(restaurant.getLink());
         super.setMapx(restaurant.getMapx());
         super.setMapy(restaurant.getMapy());
         super.setName(restaurant.getName());
         super.setTelephone(restaurant.getTelephone());
+        super.setHalal(restaurant.getHalal());
+        super.setImage_base64(restaurant.getImage_base64());
     }
 
     protected ParcelableRestaurant(Parcel in) {
-        super.setName(in.readString());
+        super.setID(in.readInt());
         super.setAddress(in.readString());
         super.setCategory(in.readInt());
-        super.setLink(in.readString());
+        super.setDistance(in.readDouble());
+//        super.setFoods(in.readArrayList().getFoods());
+        super.setMapx(in.readDouble());
+        super.setMapy(in.readDouble());
+        super.setName(in.readString());
         super.setTelephone(in.readString());
+        super.setHalal(in.readInt());
+        super.setImage_base64(in.readString());
     }
 
     public static final Creator<ParcelableRestaurant> CREATOR = new Creator<ParcelableRestaurant>() {
@@ -56,10 +62,14 @@ public class ParcelableRestaurant extends Restaurant implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(super.getID());
         dest.writeString(super.getName());
-        dest.writeString(super.getAddress());
         dest.writeInt(super.getCategory());
-        dest.writeString(super.getLink());
         dest.writeString(super.getTelephone());
+        dest.writeString(super.getAddress());
+        dest.writeDouble(super.getMapx());
+        dest.writeDouble(super.getMapy());
+        dest.writeInt(super.getHalal());
+        dest.writeString(super.getImage_base64());
     }
 }

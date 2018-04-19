@@ -22,8 +22,11 @@
         <item name="background">@color/logoColor</item>
     </style>
 
-    <style name="CustomToolbar" parent="Base.ThemeOverlay.AppCompat.ActionBar">
-        <item name="android:background">@color/logoColor</item>
+    <style name="CustomToolbar" parent="Base.V7.Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/white</item>
+        <item name="android:contentInsetStart">0dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:fitsSystemWindows">false</item>
     </style>
 
     <style name="Base.Widget.AppCompat.RatingBar" parent="Base.Widget.AppCompat.RatingBar">

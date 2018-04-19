@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -18,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,10 +22,10 @@ import android.widget.TextView;
 
 import com.example.hansangjin.froot.Adapter.RestaurantMapRecyclerViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
-import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
 import com.example.hansangjin.froot.Data.Restaurant;
 import com.example.hansangjin.froot.Listener.MapMarkerClickListener;
 import com.example.hansangjin.froot.Listener.ScrollListener;
+import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
 import com.example.hansangjin.froot.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -45,19 +41,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class RestaurantMapActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks, LocationListener, Runnable {
+        GoogleApiClient.ConnectionCallbacks, LocationListener {
     private final int MAP_ACTIVITY_CODE = 300;
 
     private final int LOCATION_PERMISSION_REQUEST_CODE = 0;
@@ -144,7 +132,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
     }
 
     private void createObject() {
-        intent = getIntent();
+//        intent = getIntent();
 
         recyclerView = findViewById(R.id.restaurant_list_view);
         toolbar_start_image = findViewById(R.id.toolbar_button_left);
@@ -180,17 +168,17 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar_start_image.setVisibility(View.VISIBLE);
-        toolbar_start_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.ic_clear_black_36dp));
-        toolbar_start_image.setOnClickListener(this);
+//        toolbar_start_image.setVisibility(View.VISIBLE);
+//        toolbar_start_image.setImageBitmap(ApplicationController.setUpImage(R.drawable.ic_clear_black_36dp));
+//        toolbar_start_image.setOnClickListener(this);
 
-        Shader textShader = new LinearGradient(0, 0, 0, 100,
-                new int[]{Color.GREEN, Color.BLUE},
-                new float[]{0, 1}, Shader.TileMode.CLAMP);
-
-        textView_title.setVisibility(View.VISIBLE);
-        textView_title.setText("주변 식당 찾기");
-        textView_title.getPaint().setShader(textShader);
+//        Shader textShader = new LinearGradient(0, 0, 0, 100,
+//                new int[]{Color.GREEN, Color.BLUE},
+//                new float[]{0, 1}, Shader.TileMode.CLAMP);
+//
+//        textView_title.setVisibility(View.VISIBLE);
+//        textView_title.setText("주변 식당 찾기");
+//        textView_title.getPaint().setShader(textShader);
 
 //        textView_title.setTextColor(getResources().getColor(R.color.logoColor));
     }
@@ -200,19 +188,10 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
 //        restaurantList.add(new ParcelableRestaurant(1, "이태원 구월당"));
 //        restaurantList.add(new ParcelableRestaurant(2, "홍대개미"));
 
-        restaurantList = intent.getParcelableArrayListExtra("restaurants");
+//        restaurantList = intent.getParcelableArrayListExtra("restaurants");
 
         Log.d("asdads", restaurantList.toString());
 
-        //네이버 식당 정보 검색
-        try {
-            Thread networkThread = new Thread(this);
-
-            networkThread.start();
-            networkThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private void setUpUI() {
@@ -267,131 +246,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    //식당 검색
-    private void getSearchResult() {
-        for (int i = 0; i < restaurantList.size(); i++) {
-            StringBuilder sb = null;
-            String keyword = restaurantList.get(i).getName();
 
-            try {
-                String text = URLEncoder.encode(keyword, "UTF8");
-                String urlStr = "https://openapi.naver.com/v1/search/local.json?query=" + text;
-                URL url = null;
-                url = new URL(urlStr);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("X-Naver-Client-ID", NAVER_CLIENT_ID); //발급받은ID
-                connection.setRequestProperty("X-Naver-Client-Secret", NAVER_CLIENT_SECRET);//발급받은PW
-
-                int responseCode = connection.getResponseCode();
-                BufferedReader br;
-                if (responseCode == connection.HTTP_OK) {
-                    br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                } else {
-                    br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-                }
-                sb = new StringBuilder();
-                String line;
-
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
-                }
-
-                br.close();
-                connection.disconnect();
-
-                setRestaurantInfo(sb, i);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        Log.d("Restaurant", restaurantList.toString());
-    }
-
-    private void setRestaurantInfo(StringBuilder sb, int position) {
-        try {
-            JSONObject jsonObject = new JSONObject(sb.toString());
-
-            JSONArray items = jsonObject.getJSONArray("items");
-
-            for (int j = 0; j < items.length(); j++) {
-                JSONObject value = items.getJSONObject(j);
-
-                restaurantList.get(position).setName(Html.fromHtml(value.getString("title")).toString());
-                restaurantList.get(position).setLink(value.getString("link"));
-//                restaurantList.get(position).setCategory(value.getString("category"));
-                restaurantList.get(position).setDescription(value.getString("description"));
-                restaurantList.get(position).setTelephone(value.getString("telephone"));
-                restaurantList.get(position).setAddress(value.getString("address"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    private void convertCoor() {
-        for (int i = 0; i < restaurantList.size(); i++) {
-            try {
-                String addr = URLEncoder.encode(restaurantList.get(i).getAddress(), "UTF-8");
-                String apiURL = "https://openapi.naver.com/v1/map/geocode?query=" + addr; //json
-//                String apiURL = "https://openapi.naver.com/v1/map/geocode.xml?query=" + addr; // xml
-                URL url = new URL(apiURL);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("X-Naver-Client-Id", NAVER_CLIENT_ID);
-                connection.setRequestProperty("X-Naver-Client-Secret", NAVER_CLIENT_SECRET);
-
-                int responseCode = connection.getResponseCode();
-                BufferedReader br;
-                StringBuilder sb;
-
-                if (responseCode == connection.HTTP_OK) {
-                    br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                } else {
-                    br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-                }
-                sb = new StringBuilder();
-                String line;
-
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
-                }
-
-                br.close();
-                connection.disconnect();
-
-
-                setCoor(sb, i);
-
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-        }
-    }
-
-    private void setCoor(StringBuilder sb, int position) {
-
-        try {
-            JSONObject result = new JSONObject(sb.toString()).getJSONObject("result");
-
-            JSONArray items = result.getJSONArray("items");
-
-            for (int j = 0; j < items.length(); j++) {
-                JSONObject point = items.getJSONObject(j).getJSONObject("point");
-
-                String x = point.getString("x");
-                String y = point.getString("y");
-
-                restaurantList.get(position).setMapx(Double.parseDouble(x));
-                restaurantList.get(position).setMapy(Double.parseDouble(y));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public void setSelectedChild(int position) {
         if (!markers.isEmpty()) {
@@ -523,7 +378,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
 
         } else {
             Log.d("aaaaaaaaaaa", "Current location is null. Using defaults.");
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.56, 126.97), 10));
+//            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.56, 126.97), 10));
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
@@ -565,15 +420,6 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onProviderDisabled(String provider) {
 
-    }
-
-    @Override
-    public void run() {
-        //네이버 검색 네트워킹을 위한 쓰레드
-        getSearchResult();
-        convertCoor();
-
-        return;
     }
 
 

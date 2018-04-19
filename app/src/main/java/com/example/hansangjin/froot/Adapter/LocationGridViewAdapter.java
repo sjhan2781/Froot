@@ -1,5 +1,6 @@
 package com.example.hansangjin.froot.Adapter;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -7,6 +8,8 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
 import com.example.hansangjin.froot.CustomView.MyBottomSheetDialogFragment;
+import com.example.hansangjin.froot.ParcelableData.ParcelableLocation;
+import com.example.hansangjin.froot.R;
 
 import java.util.ArrayList;
 
@@ -15,12 +18,12 @@ import java.util.ArrayList;
  */
 
 public class LocationGridViewAdapter extends BaseAdapter implements CompoundButton.OnCheckedChangeListener{
-    private ArrayList<String> locations;
+    private ArrayList<ParcelableLocation> locations;
     private MyBottomSheetDialogFragment fragment;
     private ArrayList<RadioButton> radioButtons;
     private int selectedPos;
 
-    public LocationGridViewAdapter(ArrayList<String> locations, MyBottomSheetDialogFragment fragment) {
+    public LocationGridViewAdapter(ArrayList<ParcelableLocation> locations, MyBottomSheetDialogFragment fragment) {
         this.locations = locations;
         this.fragment = fragment;
         radioButtons = new ArrayList<>();
@@ -46,11 +49,16 @@ public class LocationGridViewAdapter extends BaseAdapter implements CompoundButt
 //        RadioButton radioButton = new RadioButton(context);
 
         if(convertView == null){
-            convertView = new RadioButton(fragment.getContext());
-            convertView.setId(position);
-            ((RadioButton) convertView).setText(locations.get(position));
-            ((RadioButton) convertView).setOnCheckedChangeListener(this);
-            radioButtons.add((RadioButton) convertView);
+            LayoutInflater inflater = fragment.getLayoutInflater();
+            convertView = inflater.inflate(R.layout.layout_location_radio_button, null);
+//            convertView = new RadioButton(fragment.getContext());
+
+            RadioButton radioButton = convertView.findViewById(R.id.radioButton_location);
+            radioButton.setId(position);
+            radioButton.setText(locations.get(position).getLocation());
+            radioButton.setOnCheckedChangeListener(this);
+
+            radioButtons.add(radioButton);
         }
 
         return convertView;

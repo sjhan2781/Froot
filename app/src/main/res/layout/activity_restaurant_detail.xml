@@ -42,8 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginBottom="59dp"
-                android:background="@color/logoColor"
-                android:fitsSystemWindows="false"
+                style="@style/CustomToolbar"
                 app:layout_collapseMode="pin" />
 
             <android.support.v7.widget.CardView
@@ -64,7 +63,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:background="#eeeeee"
-
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout

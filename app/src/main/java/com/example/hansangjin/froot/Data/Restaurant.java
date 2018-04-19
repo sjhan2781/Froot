@@ -15,14 +15,14 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
 
     private int ID;
     private String name;
-    private String link;
     private int category;
-    private String description;
     private String telephone;
     private String address;
     private double distance;
     private double mapx;
     private double mapy;
+    private String image_base64;
+    private int halal;
     private ArrayList<Food> foods;
 
     public Restaurant() {
@@ -52,28 +52,12 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
         this.name = name;
     }
 
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
     public int getCategory() {
         return category;
     }
 
     public void setCategory(int category) {
         this.category = category;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getTelephone() {
@@ -116,6 +100,22 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
         this.distance = distance;
     }
 
+    public String getImage_base64() {
+        return image_base64;
+    }
+
+    public void setImage_base64(String image_base64) {
+        this.image_base64 = image_base64;
+    }
+
+    public int getHalal() {
+        return halal;
+    }
+
+    public void setHalal(int halal) {
+        this.halal = halal;
+    }
+
     public ArrayList<Food> getFoods() {
         return foods;
     }
@@ -150,9 +150,7 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
     public String toString() {
         return "Restaurant{" +
                 "name='" + name + '\'' +
-                ", link='" + link + '\'' +
                 ", category='" + category + '\'' +
-                ", description='" + description + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", address='" + address + '\'' +
                 ", distance=" + distance +

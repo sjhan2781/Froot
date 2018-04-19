@@ -1,8 +1,12 @@
 package com.example.hansangjin.froot.Adapter;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +17,20 @@ import com.example.hansangjin.froot.Activities.RestaurantDetailActivity;
 import com.example.hansangjin.froot.Activities.RestaurantListActivity;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
+import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurantType;
 import com.example.hansangjin.froot.R;
 
 import java.util.ArrayList;
 
 
-
-public class RestaurantListRecycleViewAdapter extends RecyclerView.Adapter<RestaurantListRecycleViewAdapter.MyViewHolder>{
+public class RestaurantListRecycleViewAdapter extends RecyclerView.Adapter<RestaurantListRecycleViewAdapter.MyViewHolder> {
     private ArrayList<ParcelableRestaurant> restaurantList;
+    private ArrayList<ParcelableRestaurantType> restaurantTypeList;
     private RestaurantListActivity activity;
 
-    public RestaurantListRecycleViewAdapter(RestaurantListActivity activity, ArrayList<ParcelableRestaurant> restaurantList) {
+    public RestaurantListRecycleViewAdapter(RestaurantListActivity activity, ArrayList<ParcelableRestaurant> restaurantList, ArrayList<ParcelableRestaurantType> restaurantTypeList) {
         this.restaurantList = restaurantList;
+        this.restaurantTypeList = restaurantTypeList;
         this.activity = activity;
     }
 
@@ -38,10 +44,41 @@ public class RestaurantListRecycleViewAdapter extends RecyclerView.Adapter<Resta
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+        int halal_mark_resource_id = 0;
+        int image_width = holder.image_rastaurant.getLayoutParams().width;
+        int image_height = holder.image_rastaurant.getLayoutParams().height;
 
         holder.textView_restaurant_name.setText(restaurantList.get(position).getName());
-        holder.textView_restaurant_category.setText(restaurantList.get(position).getCategory() + "");
+        holder.textView_restaurant_category.setText(restaurantTypeList.get(restaurantList.get(position).getCategory()).getType());
         holder.textView_recommended_count.setText(restaurantList.get(position).getFoods().size() + "개");
+        Log.d("image width",  image_width + "");
+        Log.d("image height", image_height + "");
+
+        if(!restaurantList.get(position).getImage_base64().isEmpty()) {
+            holder.image_rastaurant.setImageBitmap(Bitmap.createScaledBitmap(getBitmapFromString(restaurantList.get(position).getImage_base64()), image_width, image_height, true));
+        }
+
+        switch (restaurantList.get(position).getHalal()) {
+            case 1:
+                halal_mark_resource_id = R.drawable.image_halal_certified;
+                break;
+            case 2:
+                halal_mark_resource_id = R.drawable.image_self_certified;
+                break;
+            case 3:
+                halal_mark_resource_id = R.drawable.image_muslim_friendly;
+                break;
+            case 4:
+                halal_mark_resource_id = R.drawable.image_pork_free;
+                break;
+            default:
+
+                break;
+        }
+
+        holder.imageView_halal_mark.setImageResource(halal_mark_resource_id);
+
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +99,7 @@ public class RestaurantListRecycleViewAdapter extends RecyclerView.Adapter<Resta
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textView_restaurant_name, textView_restaurant_category, textView_recommended_count;
-        private ImageView image_rastaurant;
+        private ImageView image_rastaurant, imageView_halal_mark;
 
 
         public MyViewHolder(View parent) {
@@ -72,6 +109,18 @@ public class RestaurantListRecycleViewAdapter extends RecyclerView.Adapter<Resta
             this.textView_restaurant_name = parent.findViewById(R.id.textView_restaurant_name);
             this.textView_restaurant_category = parent.findViewById(R.id.textView_restaurant_category);
             this.textView_recommended_count = parent.findViewById(R.id.textView_recommended_count);
+            this.imageView_halal_mark = parent.findViewById(R.id.imageView_halal_mark);
         }
     }
+
+    private Bitmap getBitmapFromString(String jsonString) {
+/*
+* This Function converts the String back to Bitmap
+* */
+        byte[] decodedString = Base64.decode(jsonString, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
+    }
+
+
 }
