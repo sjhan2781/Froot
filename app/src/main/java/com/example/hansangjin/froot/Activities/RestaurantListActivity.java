@@ -65,6 +65,8 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
     private Locale locale;
     private String locale_str;
 
+    private String selected_info;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +81,11 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
     }
 
     private void creatObjects() {
+        intent = getIntent();
+        selected_info = intent.getStringExtra("selected_info");
+
+        selected_info = selected_info.substring(1, selected_info.length()-1);
+
         toolbar_left_image = findViewById(R.id.toolbar_button_left);
         toolbar_right_image = findViewById(R.id.toolbar_button_right);
         bottomSheet = findViewById(R.id.design_bottom_sheet);
@@ -114,9 +121,7 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
     }
 
     private void setUpData() {
-
-        getData("http://froot.iptime.org:8080/restaurantList_activity.php");
-
+        getLocationData("http://froot.iptime.org:8080/getLocation.php");
     }
 
     private void setUpUI() {
@@ -130,7 +135,6 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
         setSupportActionBar(toolbar);
 
         behavior = BottomSheetBehavior.from(bottomSheet);
-        setLocation(0);
 
         drop_down_image.setVisibility(View.VISIBLE);
         textView_title.setVisibility(View.VISIBLE);
@@ -168,7 +172,7 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onTabChanged(String tabId) {
-        Log.d("adsasddsa", tabId);
+
     }
 
     private void setUpTabView() {
@@ -211,6 +215,8 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
 
     public void setLocation(int position) {
         textView_title.setText(locationList.get(position).getLocation());
+
+        getRestaurantData("http://froot.iptime.org:8080/restaurantList_activity.php", locationList.get(position));
     }
 
     private void setUpToast() {
@@ -226,7 +232,7 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
         backPressCloseHandler.setToast(toast);
     }
 
-    public void getData(String url) {
+    public void getLocationData(String url){
         class GetDataJSON extends AsyncTask<String, Void, String> {
 
             @Override
@@ -279,14 +285,77 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
             @Override
             protected void onPostExecute(String result) {
                 Log.d("result", result);
-                setLists(result);
+                setLocationList(result);
             }
         }
         GetDataJSON g = new GetDataJSON();
         g.execute(url);
     }
 
-    private void setLists(String strJSON) {
+    public void getRestaurantData(String url, final Location curLocation) {
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String uri = params[0];
+
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setReadTimeout(5000);
+                    con.setConnectTimeout(10000);
+                    con.setUseCaches(false); // 캐시 사용 안 함
+                    con.setRequestMethod("POST");
+                    con.setDoOutput(true);
+                    con.setDoInput(true);
+                    con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                    OutputStream os = con.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8")); //캐릭터셋 설정
+                    Log.d("asdasdas", "lang=" + locale_str + "&location=" + curLocation.getId() + "&select=" + selected_info);
+                    writer.write("lang=" + locale_str + "&location=" + curLocation.getId() + "&select=" + selected_info); //요청 파라미터를 입력
+//                    writer.write("lang=" + locale_str); //요청 파라미터를 입력
+
+                    writer.flush();
+                    writer.close();
+                    os.close();
+
+                    con.connect();
+
+                    int retCode = con.getResponseCode();
+
+                    Log.d("ResponseCode", retCode + "");
+
+                    StringBuilder sb = new StringBuilder();
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    String json;
+                    while ((json = bufferedReader.readLine()) != null) {
+                        sb.append(json + "\n");
+                    }
+
+                    return sb.toString().trim();
+
+                } catch (Exception e) {
+                    return null;
+                }
+
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                Log.d("result", result);
+                setRestaurantList(result);
+            }
+        }
+        GetDataJSON g = new GetDataJSON();
+        g.execute(url);
+    }
+
+    private void setLocationList(String strJSON){
         try {
             JSONObject jsonObj = new JSONObject(strJSON);
 
@@ -300,29 +369,38 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
                 locationList.add(new ParcelableLocation(new Location(id, location_str)));
             }
 
-           jsonArray = jsonObj.getJSONArray("category");
+
+            jsonArray = jsonObj.getJSONArray("restaurant_type");
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject c = jsonArray.getJSONObject(i);
-                int id = c.getInt("category_id");
-                String category_str = c.getString("category_str");
+                int id = c.getInt("type_id");
+                String category_str = c.getString("type_str");
 
                 restaurantTypeList.add(new ParcelableRestaurantType(new RestaurantType(id, category_str)));
             }
+
+            ApplicationController.setRestaurantTypes(restaurantTypeList);
+
+            setLocation(0);
+
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void setRestaurantList(String strJSON) {
+        try {
+            restaurantList.clear();
+
+            JSONObject jsonObj = new JSONObject(strJSON);
+
+            JSONArray jsonArray = null;
 
             jsonArray = jsonObj.getJSONArray("restaurant");
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject c = jsonArray.getJSONObject(i);
-//                int id = ;
-//                String name = c.getString("restaurant_str");
-//                int category_id = c.getInt("category");
-//                String address = c.getString("address");
-//                String telephone = c.getString("telephone");
-//                int mapx = c.getInt("lat");
-//                int mapy = c.getInt("lng");
-//                int halal = c.getInt("halal");
-//                String image_base64 = c.getString("image_base64");
 
                 Restaurant restaurant = new Restaurant();
                 restaurant.setID(c.getInt("restaurant_id"));
@@ -334,6 +412,7 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
                 restaurant.setMapy( c.getInt("lng"));
                 restaurant.setHalal(c.getInt("halal"));
                 restaurant.setImage_base64(c.getString("image_base64"));
+                restaurant.setFoods(c.getString("foods"));
 
                 restaurantList.add(new ParcelableRestaurant(restaurant));
             }

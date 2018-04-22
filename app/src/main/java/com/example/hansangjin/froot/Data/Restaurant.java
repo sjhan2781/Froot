@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 /**
  * Created by hansangjin on 2018. 1. 18..
@@ -23,17 +22,17 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
     private double mapy;
     private String image_base64;
     private int halal;
-    private ArrayList<Food> foods;
+    private String foods;
 
     public Restaurant() {
-        foods = new ArrayList<>();
+
     }
 
     public Restaurant(int ID, String name, int category) {
         this.ID = ID;
         this.name = name;
         this.category = category;
-        foods = new ArrayList<>();
+
     }
 
     public int getID() {
@@ -116,11 +115,11 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
         this.halal = halal;
     }
 
-    public ArrayList<Food> getFoods() {
+    public String getFoods() {
         return foods;
     }
 
-    public void setFoods(ArrayList<Food> foods) {
+    public void setFoods(String foods) {
         this.foods = foods;
     }
 
@@ -149,13 +148,17 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
     @Override
     public String toString() {
         return "Restaurant{" +
-                "name='" + name + '\'' +
-                ", category='" + category + '\'' +
+                "ID=" + ID +
+                ", name='" + name + '\'' +
+                ", category=" + category +
                 ", telephone='" + telephone + '\'' +
                 ", address='" + address + '\'' +
                 ", distance=" + distance +
                 ", mapx=" + mapx +
                 ", mapy=" + mapy +
+                ", image_base64='" + image_base64 + '\'' +
+                ", halal=" + halal +
+                ", foods='" + foods + '\'' +
                 '}';
     }
 }

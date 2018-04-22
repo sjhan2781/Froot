@@ -24,7 +24,8 @@
         android:text="음식점 추천"
         android:textAlignment="center"
         android:textColor="@color/register_button_text_selector"
-        android:textSize="19sp" />
+        android:textSize="19sp"
+        android:enabled="false"/>
 
     <ExpandableListView
         android:id="@+id/expandableListView"

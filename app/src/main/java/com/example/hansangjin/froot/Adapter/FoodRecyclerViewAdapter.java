@@ -1,7 +1,10 @@
 package com.example.hansangjin.froot.Adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,18 +48,23 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        final int curPos = position;
+        int image_width = holder.imageView_food.getLayoutParams().width;
+        int image_height = holder.imageView_food.getLayoutParams().height;
 
         holder.textView_food_name.setText(foods.get(position).getName());
-        holder.textView_food_price.setText(String.valueOf(foods.get(position).getPrice()) + "원");
-//        holder.imageView_food.setImageBitmap();
+        holder.textView_food_price.setText(String.format("%s원", foods.get(position).getPrice()));
 
-        if (foods.get(position).isPossible()) {
-            holder.imageView_food_enable.setVisibility(View.VISIBLE);
-        }else{
+        if (foods.get(position).isAvailable()) {
             holder.imageView_food_enable.setVisibility(View.INVISIBLE);
+        }else{
+            holder.imageView_food_enable.setVisibility(View.VISIBLE);
 
         }
+
+        if (!foods.get(position).getImage_base64().isEmpty()) {
+            holder.imageView_food.setImageBitmap(Bitmap.createScaledBitmap(getBitmapFromString(foods.get(position).getImage_base64()), image_width, image_height, true));
+        }
+
 //        if (getSelectedPos() == position){
 //            holder.itemView.setBackgroundColor(activity.getResources().getColor(R.color.logoColor));
 //        }
@@ -97,5 +105,14 @@ public class FoodRecyclerViewAdapter extends RecyclerView.Adapter<FoodRecyclerVi
             imageView_food = parent.findViewById(R.id.imageView_food);
             imageView_food_enable = parent.findViewById(R.id.imageView_food_enable);
         }
+    }
+
+    private Bitmap getBitmapFromString(String jsonString) {
+/*
+* This Function converts the String back to Bitmap
+* */
+        byte[] decodedString = Base64.decode(jsonString, Base64.DEFAULT);
+
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }

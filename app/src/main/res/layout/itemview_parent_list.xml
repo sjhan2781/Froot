@@ -13,19 +13,19 @@
         android:layout_marginBottom="9dp"
         android:layout_centerVertical="true"
         android:textSize="18sp"
-        android:textColor="#87000000"
+        android:textColor="@color/category_text_selector"
         />
 
     <!-- this is where arrow will be at -->
 
     <ImageView
         android:id="@+id/indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="22dp"
         android:layout_centerVertical="true"
-        />
+        android:layout_marginEnd="22dp"
+        android:src="@drawable/expandablelistview_indicator_selector"/>
 
 
 </RelativeLayout>

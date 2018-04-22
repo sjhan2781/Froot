@@ -19,7 +19,8 @@ import android.widget.Toast;
 import com.example.hansangjin.froot.Adapter.CategoryExpandableListViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.BackPressCloseHandler;
-import com.example.hansangjin.froot.Data.Category;
+import com.example.hansangjin.froot.Data.CategoryDetail;
+import com.example.hansangjin.froot.Data.CategoryMain;
 import com.example.hansangjin.froot.R;
 
 import org.json.JSONArray;
@@ -46,17 +47,12 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
     private BackPressCloseHandler backPressCloseHandler;
 
-    private ArrayList<Category> categories;
 
-    private ArrayList<String> religionList = new ArrayList<>();
-    private ArrayList<String> allergyList = new ArrayList<>();
-    private ArrayList<String> vegetarianList = new ArrayList<>();
+    private ArrayList<CategoryMain> categories;
 
     private static Toast toast = null;
 
-    final int CATEGORY_RELIGION = 0;
-    final int CATEGORY_VEGETABLE = 1;
-    final int CATEGORY_ALLERGY = 2;
+    final int CATEGORY_RELIGION = 1;
 
     private Locale locale;
     private String locale_str;
@@ -73,7 +69,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         createObjects();
         setUpToolbar();
         setUpData();
-        setUpUI();
+//        setUpUI();
         setUpListenter();
         setUpToast();
     }
@@ -88,13 +84,9 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
         categories = new ArrayList<>();
 
-        religionList = new ArrayList<>();
-        vegetarianList = new ArrayList<>();
-        allergyList = new ArrayList<>();
-
         backPressCloseHandler = new BackPressCloseHandler(this);
 
-        categoryExpandableListViewAdapter = new CategoryExpandableListViewAdapter(this, categoryListView, categories);
+        categoryExpandableListViewAdapter = new CategoryExpandableListViewAdapter(this, categoryListView);
 
         locale = getResources().getConfiguration().locale;
         Log.d("language", locale.getLanguage());
@@ -130,10 +122,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     private void setUpData() {
         getData("http://froot.iptime.org:8080/category_activity.php");
 
-        categories.add(new Category("종교", 0, religionList));
-        categories.add(new Category("채식주의", 1, vegetarianList));
-        categories.add(new Category("알러지", 2, allergyList));
-
+//        setUpUI();
     }
 
     private void setUpUI() {
@@ -182,12 +171,15 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
             ApplicationController.startActivity(this, intent);
         } else if (v == register_button) {
             Intent intent;
-
-            if (categoryExpandableListViewAdapter.getSelectedCategory().getType() == CATEGORY_RELIGION) {
+            if (categoryExpandableListViewAdapter.getSelectedCategory().getId() == CATEGORY_RELIGION) {
                 intent = new Intent(getApplicationContext(), ReligionRestaurantActivity.class);
             } else {
                 intent = new Intent(getApplicationContext(), RestaurantListActivity.class);
+//                intent.putExtra("ingredients");
             }
+            Log.d("selected", categoryExpandableListViewAdapter.getSelectedCategory().getDetails().toString());
+
+            intent.putExtra("selected_info", categoryExpandableListViewAdapter.getSelectedCategory().getDetails().toString());
             ApplicationController.startActivity(this, intent);
         }
 
@@ -205,32 +197,33 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     private void setLists(String strJSON) {
         try {
             JSONObject jsonObj = new JSONObject(strJSON);
-            JSONArray jsonArray = jsonObj.getJSONArray("religion");
+            JSONArray jsonArray = jsonObj.getJSONArray("category");
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject c = jsonArray.getJSONObject(i);
-                String name = c.getString("religion_str");
 
-                religionList.add(name);
+                ArrayList<CategoryDetail> tmpDetailList = new ArrayList<>();
+
+
+                int main_id = c.getInt("main_id");
+                String main_str = c.getString("category_main");
+                int sel_type = c.getInt("sel_type");
+
+
+                JSONArray tmpJSONArray = c.getJSONArray("category_details");
+
+                for (int j = 0; j < tmpJSONArray.length(); j++){
+                    JSONObject tmpObj = tmpJSONArray.getJSONObject(j);
+                    CategoryDetail detail = new CategoryDetail(tmpObj.getInt("detail_id"), tmpObj.getString("detail_str"));
+                    tmpDetailList.add(detail);
+                }
+
+                categories.add(new CategoryMain(main_id, main_str, sel_type, tmpDetailList));
             }
 
-            jsonArray = jsonObj.getJSONArray("vegetarian");
+            categoryExpandableListViewAdapter.setCategories(categories);
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject c = jsonArray.getJSONObject(i);
-                String name = c.getString("vegetarian_str");
-
-                vegetarianList.add(name);
-            }
-
-            jsonArray = jsonObj.getJSONArray("ingredient");
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject c = jsonArray.getJSONObject(i);
-                String name = c.getString("ingredient_str");
-
-                allergyList.add(name);
-            }
+            setUpUI();
 
             categoryExpandableListViewAdapter.notifyDataSetChanged();
             categoryListView.invalidate();
@@ -258,10 +251,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
                     con.setDoOutput(true);
                     con.setDoInput(true);
                     con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-                    StringBuilder language = new StringBuilder();
-                    language.append("lang").append("=").append(locale_str);
-                    Log.d("aaaa", locale_str);
 
                     OutputStream os = con.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8")); //캐릭터셋 설정
@@ -295,7 +284,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             protected void onPostExecute(String result) {
-                Log.d("categories", result);
                 setLists(result);
             }
         }

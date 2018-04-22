@@ -11,12 +11,14 @@ import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 
 import com.example.hansangjin.froot.Kakao.KakaoSDKAdapter;
+import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurantType;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.kakao.auth.KakaoSDK;
 import com.kakao.auth.Session;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -36,6 +38,8 @@ public class ApplicationController extends Application {
 
     public static DisplayMetrics metrics;
 
+    private static ArrayList<ParcelableRestaurantType> restaurantTypes;
+
     /**
      * 이미지 로더, 이미지 캐시, 요청 큐를 초기화한다.
      */
@@ -49,6 +53,8 @@ public class ApplicationController extends Application {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         KakaoSDK.init(new KakaoSDKAdapter());
+
+        restaurantTypes = new ArrayList<>();
 
         facebookAccessToken = AccessToken.getCurrentAccessToken();
         kakaoAccessToken = Session.getCurrentSession().getAccessToken();
@@ -111,5 +117,13 @@ public class ApplicationController extends Application {
     public void onTerminate() {
         super.onTerminate();
         instance = null;
+    }
+
+    public static ArrayList<ParcelableRestaurantType> getRestaurantTypes() {
+        return restaurantTypes;
+    }
+
+    public static void setRestaurantTypes(ArrayList<ParcelableRestaurantType> restaurantTypes) {
+        ApplicationController.restaurantTypes = restaurantTypes;
     }
 }

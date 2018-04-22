@@ -11,17 +11,29 @@ import java.io.Serializable;
 public class Food implements Serializable, Comparable<Food> {
     private static final long serialVersionUID = -3435254357911427723L;
 
+    private int id;
     private String name;
     private int price;
-    private boolean possible;
+    private String image_base64;
+    private boolean available;
 
     public Food() {
     }
 
-    public Food(String name, int price, boolean possible) {
+    public Food(int id, String name, int price, String image_base64, boolean available) {
+        this.id = id;
         this.name = name;
         this.price = price;
-        this.possible = possible;
+        this.image_base64 = image_base64;
+        this.available = available;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -40,18 +52,26 @@ public class Food implements Serializable, Comparable<Food> {
         this.price = price;
     }
 
-    public boolean isPossible() {
-        return possible;
+    public String getImage_base64() {
+        return image_base64;
     }
 
-    public void setPossible(boolean possible) {
-        this.possible = possible;
+    public void setImage_base64(String image_base64) {
+        this.image_base64 = image_base64;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
     @Override
     public int compareTo(@NonNull Food o) {
-        Boolean thisP = possible;
+        Boolean thisP = o.isAvailable();
 
-        return thisP.compareTo(o.isPossible());
+        return thisP.compareTo(this.isAvailable());
     }
 }

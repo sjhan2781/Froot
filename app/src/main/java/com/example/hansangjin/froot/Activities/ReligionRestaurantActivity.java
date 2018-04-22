@@ -1,9 +1,12 @@
 package com.example.hansangjin.froot.Activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +16,27 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hansangjin.froot.Adapter.RestaurantListRecycleViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.BackPressCloseHandler;
+import com.example.hansangjin.froot.Data.Restaurant;
+import com.example.hansangjin.froot.Data.RestaurantType;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
+import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurantType;
 import com.example.hansangjin.froot.R;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ReligionRestaurantActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageView toolbar_left_image, toolbar_right_image, toolbar_image_logo;
@@ -26,12 +44,17 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
 
     private Intent intent;
     private ArrayList<ParcelableRestaurant> restaurantList;
-    private ArrayList<String> kindList;
-    private ArrayList<String> locationList;
+    private ArrayList<ParcelableRestaurantType> restaurantTypeList;
+
+    private RecyclerView restaurantRecyclerView;
+    private RestaurantListRecycleViewAdapter restaurantListRecycleViewAdapter;
 
     private BackPressCloseHandler backPressCloseHandler;
 
     private Toast toast;
+
+    private Locale locale;
+    private String locale_str;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,36 +77,43 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
         container_halal = findViewById(R.id.container_halal);
 
         restaurantList = new ArrayList<>();
-        kindList = new ArrayList<>();
-        locationList = new ArrayList<>();
+        restaurantTypeList = new ArrayList<>();
+
+        restaurantRecyclerView = findViewById(R.id.recyclerView_restaurant);
+
+        restaurantListRecycleViewAdapter = new RestaurantListRecycleViewAdapter(this, restaurantList, restaurantTypeList);
 
         backPressCloseHandler = new BackPressCloseHandler(this);
+
+        locale = getResources().getConfiguration().locale;
+        Log.d("language", locale.getLanguage());
+
+        if (locale.getLanguage().equals("ko")){
+            locale_str = "ko";
+        }
+        else if (locale.getLanguage().equals("ja")){
+            locale_str = "ja";
+        }
+        else if (locale.getLanguage().equals("rCN")){
+            locale_str = "rCN";
+        }
+        else if (locale.getLanguage().equals("rTW")){
+            locale_str = "rTW";
+        }
+        else {
+            locale_str = "en";
+        }
     }
 
     private void setUpData() {
-        restaurantList.add(new ParcelableRestaurant(0, "게코스 테라스", 1));
-        restaurantList.add(new ParcelableRestaurant(1, "구월당", 2));
-        restaurantList.add(new ParcelableRestaurant(2, "adsasd", 2));
-        restaurantList.add(new ParcelableRestaurant(3, "ffffff", 3));
-
-        kindList.add("전체");
-        kindList.add("한식");
-        kindList.add("중식");
-        kindList.add("일식");
-        kindList.add("양식");
-        kindList.add("세계음식");
-
-        locationList.add("인사동");
-        locationList.add("명동");
-        locationList.add("홍대");
-        locationList.add("이태원");
-        locationList.add("강남");
-
+        getRestaurantData("http://froot.iptime.org:8080/religionRestaurantList_activity.php");
     }
 
     private void setUpUI() {
         setUpToolbar();
         setUpToast();
+
+        restaurantRecyclerView.setAdapter(restaurantListRecycleViewAdapter);
     }
 
     private void setUpToolbar() {
@@ -98,7 +128,6 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
         toolbar_right_image.setOnClickListener(this);
         container_halal.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v) {
@@ -130,5 +159,113 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
         toast.setView(view);
 
         backPressCloseHandler.setToast(toast);
+    }
+
+    public void getRestaurantData(String url) {
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String uri = params[0];
+
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setReadTimeout(5000);
+                    con.setConnectTimeout(10000);
+                    con.setUseCaches(false); // 캐시 사용 안 함
+                    con.setRequestMethod("POST");
+                    con.setDoOutput(true);
+                    con.setDoInput(true);
+                    con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                    OutputStream os = con.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8")); //캐릭터셋 설정
+                    writer.write("lang=" + locale_str); //요청 파라미터를 입력
+                    writer.flush();
+                    writer.close();
+                    os.close();
+
+                    con.connect();
+
+                    int retCode = con.getResponseCode();
+
+                    Log.d("ResponseCode", retCode + "");
+
+                    StringBuilder sb = new StringBuilder();
+
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    String json;
+                    while ((json = bufferedReader.readLine()) != null) {
+                        sb.append(json + "\n");
+                    }
+
+                    return sb.toString().trim();
+
+                } catch (Exception e) {
+                    return null;
+                }
+
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                Log.d("result", result);
+                setRestaurantList(result);
+            }
+        }
+        GetDataJSON g = new GetDataJSON();
+        g.execute(url);
+    }
+
+    private void setRestaurantList(String strJSON) {
+        try {
+            restaurantList.clear();
+
+            JSONObject jsonObj = new JSONObject(strJSON);
+
+            JSONArray jsonArray = null;
+
+            jsonArray = jsonObj.getJSONArray("restaurant_type");
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject c = jsonArray.getJSONObject(i);
+                int id = c.getInt("type_id");
+                String category_str = c.getString("type_str");
+
+                restaurantTypeList.add(new ParcelableRestaurantType(new RestaurantType(id, category_str)));
+            }
+
+            ApplicationController.setRestaurantTypes(restaurantTypeList);
+
+            jsonArray = jsonObj.getJSONArray("restaurant");
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject c = jsonArray.getJSONObject(i);
+
+                Restaurant restaurant = new Restaurant();
+                restaurant.setID(c.getInt("restaurant_id"));
+                restaurant.setName(c.getString("restaurant_str"));
+                restaurant.setCategory(c.getInt("category"));
+                restaurant.setAddress(c.getString("address"));
+                restaurant.setTelephone(c.getString("telephone"));
+                restaurant.setMapx(c.getInt("lat"));
+                restaurant.setMapy( c.getInt("lng"));
+                restaurant.setHalal(c.getInt("halal"));
+                restaurant.setImage_base64(c.getString("image_base64"));
+                restaurant.setFoods(c.getString("foods"));
+
+                restaurantList.add(new ParcelableRestaurant(restaurant));
+            }
+
+            restaurantListRecycleViewAdapter.notifyDataSetChanged();
+            restaurantRecyclerView.invalidate();
+
+        } catch (Exception e) {
+
+        }
     }
 }

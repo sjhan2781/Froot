@@ -7,7 +7,7 @@
     android:background="#ffffff">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView_available_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -23,7 +23,7 @@
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/textView_available_count"
         app:srcCompat="@drawable/horizontal_line"
         android:contentDescription="@string/horizontal_line"/>
 

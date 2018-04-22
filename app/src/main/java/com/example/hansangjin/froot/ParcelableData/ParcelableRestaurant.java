@@ -17,30 +17,30 @@ public class ParcelableRestaurant extends Restaurant implements Parcelable {
 
     public ParcelableRestaurant(Restaurant restaurant) {
         super.setID(restaurant.getID());
-        super.setAddress(restaurant.getAddress());
+        super.setName(restaurant.getName());
         super.setCategory(restaurant.getCategory());
+        super.setTelephone(restaurant.getTelephone());
+        super.setAddress(restaurant.getAddress());
         super.setDistance(restaurant.getDistance());
-        super.setFoods(restaurant.getFoods());
         super.setMapx(restaurant.getMapx());
         super.setMapy(restaurant.getMapy());
-        super.setName(restaurant.getName());
-        super.setTelephone(restaurant.getTelephone());
-        super.setHalal(restaurant.getHalal());
         super.setImage_base64(restaurant.getImage_base64());
+        super.setHalal(restaurant.getHalal());
+        super.setFoods(restaurant.getFoods());
     }
 
     protected ParcelableRestaurant(Parcel in) {
         super.setID(in.readInt());
-        super.setAddress(in.readString());
+        super.setName(in.readString());
         super.setCategory(in.readInt());
+        super.setTelephone(in.readString());
+        super.setAddress(in.readString());
         super.setDistance(in.readDouble());
-//        super.setFoods(in.readArrayList().getFoods());
         super.setMapx(in.readDouble());
         super.setMapy(in.readDouble());
-        super.setName(in.readString());
-        super.setTelephone(in.readString());
-        super.setHalal(in.readInt());
         super.setImage_base64(in.readString());
+        super.setHalal(in.readInt());
+        super.setFoods(in.readString());
     }
 
     public static final Creator<ParcelableRestaurant> CREATOR = new Creator<ParcelableRestaurant>() {
@@ -67,9 +67,11 @@ public class ParcelableRestaurant extends Restaurant implements Parcelable {
         dest.writeInt(super.getCategory());
         dest.writeString(super.getTelephone());
         dest.writeString(super.getAddress());
+        dest.writeDouble(super.getDistance());
         dest.writeDouble(super.getMapx());
         dest.writeDouble(super.getMapy());
-        dest.writeInt(super.getHalal());
         dest.writeString(super.getImage_base64());
+        dest.writeInt(super.getHalal());
+        dest.writeString(super.getFoods());
     }
 }
