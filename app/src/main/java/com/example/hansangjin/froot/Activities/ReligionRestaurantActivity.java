@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +85,6 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
         backPressCloseHandler = new BackPressCloseHandler(this);
 
         locale = getResources().getConfiguration().locale;
-        Log.d("language", locale.getLanguage());
 
         if (locale.getLanguage().equals("ko")){
             locale_str = "ko";
@@ -192,8 +190,6 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
 
                     int retCode = con.getResponseCode();
 
-                    Log.d("ResponseCode", retCode + "");
-
                     StringBuilder sb = new StringBuilder();
 
                     bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -213,7 +209,6 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
 
             @Override
             protected void onPostExecute(String result) {
-                Log.d("result", result);
                 setRestaurantList(result);
             }
         }
@@ -252,8 +247,8 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
                 restaurant.setCategory(c.getInt("category"));
                 restaurant.setAddress(c.getString("address"));
                 restaurant.setTelephone(c.getString("telephone"));
-                restaurant.setMapx(c.getInt("lat"));
-                restaurant.setMapy( c.getInt("lng"));
+                restaurant.setMapx(c.getDouble("lat"));
+                restaurant.setMapy( c.getDouble("lng"));
                 restaurant.setHalal(c.getInt("halal"));
                 restaurant.setImage_base64(c.getString("image_base64"));
                 restaurant.setFoods(c.getString("foods"));

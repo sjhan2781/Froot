@@ -237,7 +237,7 @@ public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter
             }
         }
 
-        if (categories.get(groupPosition).getType() == 2) {
+        if (categories.get(groupPosition).getType() == MULTIPLE_CHOICE) {
             activity.showToast();
         }
 
@@ -246,7 +246,7 @@ public class CategoryExpandableListViewAdapter extends BaseExpandableListAdapter
 
     @Override
     public void onGroupCollapse(int groupPosition) {
-        if (categories.get(groupPosition).getType() == 2) {
+        if (categories.get(groupPosition).getType() == MULTIPLE_CHOICE) {
             activity.dismissToast();
         }
     }

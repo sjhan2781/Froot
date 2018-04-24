@@ -1,7 +1,10 @@
 package com.example.hansangjin.froot.Adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.hansangjin.froot.Activities.RestaurantMapActivity;
+import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
 import com.example.hansangjin.froot.R;
 
@@ -51,12 +55,20 @@ public class RestaurantMapRecyclerViewAdapter extends RecyclerView.Adapter<Resta
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final int curPos = position;
+        int image_width = holder.imageView_restaurant.getLayoutParams().width;
+        int image_height = holder.imageView_restaurant.getLayoutParams().height;
+
 
         holder.textView_restaurant_name.setText(restaurantList.get(position).getName());
-        holder.textView_restaurant_category.setText(restaurantList.get(position).getCategory() + "");
+        holder.textView_restaurant_category.setText(ApplicationController.getRestaurantTypes().get(restaurantList.get(position).getCategory()).getType());
         holder.textView_restaurant_phonenumber.setText(Html.fromHtml("<u>" + restaurantList.get(position).getTelephone() + "</u>"));
         holder.textView_restaurant_distance.setText(String.valueOf(restaurantList.get(position).getConversionDistance()));
         holder.textView_restaurant_address.setText(restaurantList.get(position).getAddress());
+
+
+        if(!restaurantList.get(position).getImage_base64().isEmpty()) {
+            holder.imageView_restaurant.setImageBitmap(Bitmap.createScaledBitmap(getBitmapFromString(restaurantList.get(position).getImage_base64()), image_width, image_height, true));
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +126,7 @@ public class RestaurantMapRecyclerViewAdapter extends RecyclerView.Adapter<Resta
 
         private TextView textView_restaurant_name, textView_restaurant_category,
                 textView_restaurant_phonenumber, textView_restaurant_distance, textView_restaurant_address;
-        private ImageView store_image;
+        private ImageView imageView_restaurant;
 
 
         public MyViewHolder(View parent) {
@@ -122,11 +134,21 @@ public class RestaurantMapRecyclerViewAdapter extends RecyclerView.Adapter<Resta
 
             parent.setClipToOutline(false);
 
+            this.imageView_restaurant = parent.findViewById(R.id.imageView_restaurant);
             this.textView_restaurant_name = parent.findViewById(R.id.textView_restaurant_name);
             this.textView_restaurant_category = parent.findViewById(R.id.textView_restaurant_category);
             this.textView_restaurant_phonenumber = parent.findViewById(R.id.textView_restaurant_phonenumber);
             this.textView_restaurant_distance = parent.findViewById(R.id.textView_distance);
             this.textView_restaurant_address = parent.findViewById(R.id.textView_review_address);
         }
+    }
+
+    private Bitmap getBitmapFromString(String jsonString) {
+/*
+* This Function converts the String back to Bitmap
+* */
+        byte[] decodedString = Base64.decode(jsonString, Base64.DEFAULT);
+
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }

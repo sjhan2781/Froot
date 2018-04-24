@@ -4,28 +4,27 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.hansangjin.froot.Adapter.RestaurantMapRecyclerViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
-import com.example.hansangjin.froot.Data.Restaurant;
-import com.example.hansangjin.froot.Listener.MapMarkerClickListener;
-import com.example.hansangjin.froot.Listener.ScrollListener;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
 import com.example.hansangjin.froot.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -42,10 +41,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-public class RestaurantMapActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener,
+public class RestaurantDetailMapActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks, LocationListener {
     private final int MAP_ACTIVITY_CODE = 300;
 
@@ -57,6 +53,12 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
     private ImageView toolbar_start_image, toolbar_end_image;
     private TextView textView_title;
 
+    private TextView textView_restaurant_name, textView_restaurant_category,
+            textView_restaurant_phonenumber, textView_restaurant_distance, textView_restaurant_address;
+    private ImageView imageView_restaurant;
+
+    private CardView cardView_restaurant;
+
     private SupportMapFragment mapFragment;
     private GoogleMap googleMap;
     private GoogleApiClient mGoogleApiClient;
@@ -64,22 +66,21 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
     private Location myLocation;
 
     private int selected_index;
-    private RecyclerView recyclerView;
-    private RestaurantMapRecyclerViewAdapter recyclerViewAdapter;
 
-    private ArrayList<ParcelableRestaurant> restaurantList;
-    private ArrayList<Marker> markers;
+    private ParcelableRestaurant restaurant;
+    private Marker marker;
 
-    private String NAVER_CLIENT_ID;
-    private String NAVER_CLIENT_SECRET;
 
     private LinearLayoutManager linearLayoutManager;
     private CameraPosition mCameraPosition;
 
+    private String NAVER_CLIENT_ID;
+    private String NAVER_CLIENT_SECRET;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restaurant_map);
+        setContentView(R.layout.activity_restaurant_detail_map);
 
         ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
 //        permissionCheck = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -135,17 +136,23 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
     private void createObject() {
         intent = getIntent();
 
-        restaurantList = intent.getParcelableArrayListExtra("restaurants");
+        restaurant = intent.getParcelableExtra("restaurant");
 
-        recyclerView = findViewById(R.id.restaurant_list_view);
         toolbar_start_image = findViewById(R.id.toolbar_button_left);
         textView_title = findViewById(R.id.toolbar_textView_title);
         toolbar_end_image = findViewById(R.id.toolbar_button_right);
 
+        imageView_restaurant = findViewById(R.id.imageView_restaurant);
+        textView_restaurant_name = findViewById(R.id.textView_restaurant_name);
+        textView_restaurant_category = findViewById(R.id.textView_restaurant_category);
+        textView_restaurant_phonenumber = findViewById(R.id.textView_restaurant_phonenumber);
+        textView_restaurant_distance = findViewById(R.id.textView_distance);
+        textView_restaurant_address = findViewById(R.id.textView_review_address);
+
+        cardView_restaurant = findViewById(R.id.cardView_restaurant);
+
         linearLayoutManager = new LinearLayoutManager(this);
 
-        markers = new ArrayList<>();
-        recyclerViewAdapter = new RestaurantMapRecyclerViewAdapter(restaurantList, this);
 
         NAVER_CLIENT_ID = getResources().getString(R.string.naver_api_client_key);
         NAVER_CLIENT_SECRET = getResources().getString(R.string.naver_api_client_secret);
@@ -175,47 +182,47 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
         toolbar_start_image.setOnClickListener(this);
 
         textView_title.setVisibility(View.VISIBLE);
-        textView_title.setText(R.string.title_restaurant_map);
-
+        textView_title.setText(restaurant.getName());
         textView_title.setTextColor(getResources().getColor(R.color.logoColor));
     }
 
     private void setUpData() {
-        restaurantList = intent.getParcelableArrayListExtra("restaurants");
+        restaurant = intent.getParcelableExtra("restaurant");
 
     }
 
     private void setUpUI() {
-
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
-//        recyclerView.setOnFlingListener(new RestaurantRecyclerViewFlingListener(this, recyclerView));
-        recyclerView.addOnScrollListener(new ScrollListener(this, recyclerView.computeHorizontalScrollExtent()));
+        int image_width = imageView_restaurant.getLayoutParams().width;
+        int image_height = imageView_restaurant.getLayoutParams().height;
 
-        recyclerView.setNestedScrollingEnabled(true);
-        linearLayoutManager.setSmoothScrollbarEnabled(true);
-        linearLayoutManager.setItemPrefetchEnabled(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(recyclerViewAdapter);
+
+        textView_restaurant_name.setText(restaurant.getName());
+        textView_restaurant_category.setText(ApplicationController.getRestaurantTypes().get(restaurant.getCategory()).getType());
+        textView_restaurant_phonenumber.setText(Html.fromHtml("<u>" + restaurant.getTelephone() + "</u>"));
+        textView_restaurant_distance.setText(String.valueOf(restaurant.getConversionDistance()));
+        textView_restaurant_address.setText(restaurant.getAddress());
+
+
+        if(!restaurant.getImage_base64().isEmpty()) {
+            imageView_restaurant.setImageBitmap(Bitmap.createScaledBitmap(getBitmapFromString(restaurant.getImage_base64()), image_width, image_height, true));
+        }
 
     }
 
     private void setUpListener() {
-        recyclerViewAdapter.setItemClick(new RestaurantMapRecyclerViewAdapter.ItemClick() {
-            @Override
-            public void onClick(View view, int position) {
-                Intent intent = new Intent(getApplicationContext(), RestaurantDetailActivity.class);
-                intent.putExtra("restaurant", (Parcelable) restaurantList.get(position));
-                startActivityForResult(intent, MAP_ACTIVITY_CODE);
-                overridePendingTransition(R.anim.activity_right_in, R.anim.activity_not_move);
-            }
-        });
+        toolbar_start_image.setOnClickListener(this);
+        cardView_restaurant.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         if (v == toolbar_start_image){
             ApplicationController.finish(this);
+        }
+        else if (v == cardView_restaurant){
+            googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
         }
     }
 
@@ -228,60 +235,25 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
 
 
 
-    public void setSelectedChild(int position) {
-        if (!markers.isEmpty()) {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(markers.get(position).getPosition()));
-            setMarkers(position);
-        }
-    }
 
     private void initMarkers() {
-        Marker marker;
         MarkerOptions markerOptions;
 
-        for (ParcelableRestaurant restaurant : restaurantList) {
-            LatLng latLng = new LatLng(restaurant.getMapx(), restaurant.getMapy());
-            markerOptions = new MarkerOptions();
-            markerOptions.position(latLng);
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_facebook_login_9)));
+        LatLng latLng = new LatLng(restaurant.getMapx(), restaurant.getMapy());
+        markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_facebook_login_9)));
 
+        marker = googleMap.addMarker(markerOptions);
+        marker.setTag(restaurant);
 
-            marker = googleMap.addMarker(markerOptions);
-            marker.setTag(restaurant);
-
-            markers.add(marker);
-        }
 
         selected_index = 0;
 
-        if(!markers.isEmpty()) {
-            markers.get(selected_index).setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_kakao_login_11)));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
-        }
-    }
 
-    public void setMarkers(int position) {
-        if (position != selected_index) {
-            Marker marker = markers.get(selected_index);
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_kakao_login_11)));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
 
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_facebook_login_9)));
-            marker.setZIndex(1.0f);
-
-            selected_index = position;
-            marker = markers.get(selected_index);
-
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_kakao_login_11)));
-            marker.setZIndex(2.0f);
-        }
-    }
-
-    public void animateCamera(int position) {
-        if (position != selected_index) {
-            Marker marker = markers.get(position);
-
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
-            setMarkers(position);
-        }
     }
 
     @Override
@@ -291,7 +263,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.56, 126.97)));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
-        googleMap.setOnMarkerClickListener(new MapMarkerClickListener(this));
+//        googleMap.setOnMarkerClickListener(new MapMarkerClickListener(this));
 
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
@@ -348,34 +320,20 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
                             myLocation.getLongitude()), 10));
 
 
-            for (Restaurant restaurant : restaurantList) {
-                float distance;
-                Location restaurantLocation = new Location(restaurant.getName());
-                restaurantLocation.setLatitude(restaurant.getMapy());
-                restaurantLocation.setLongitude(restaurant.getMapx());
-                distance = myLocation.distanceTo(restaurantLocation);
-
-                restaurant.setDistance(distance);
-            }
-            Collections.sort(restaurantList);
-
-//            setMarkers(0);
-
-            recyclerViewAdapter.notifyDataSetChanged();
+            Location restaurantLocation = new Location(restaurant.getName());
+            restaurantLocation.setLatitude(restaurant.getMapy());
+            restaurantLocation.setLongitude(restaurant.getMapx());
+            restaurant.setDistance(myLocation.distanceTo(restaurantLocation));
 
         } else {
             Log.d("aaaaaaaaaaa", "Current location is null. Using defaults.");
-            if (!restaurantList.isEmpty()) {
-                setMarkers(0);
-            }
+
 //            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.56, 126.97), 10));
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
         initMarkers();
-        if (!restaurantList.isEmpty()) {
-            setMarkers(0);
-        }
+
 
     }
 
@@ -415,5 +373,13 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    private Bitmap getBitmapFromString(String jsonString) {
+/*
+* This Function converts the String back to Bitmap
+* */
+        byte[] decodedString = Base64.decode(jsonString, Base64.DEFAULT);
+
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
 
 }

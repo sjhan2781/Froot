@@ -39,7 +39,8 @@
 
         <activity
             android:name=".Activities.SplashActivity"
-            tools:ignore="InnerclassSeparator">
+            tools:ignore="InnerclassSeparator"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -80,8 +81,15 @@
         <activity
             android:name=".Activities.RestaurantInfoActivity"
             tools:ignore="InnerclassSeparator" />
-        <activity android:name=".Activities.ReligionRestaurantActivity" />
-        <activity android:name=".Activities.HalalExplainActivity"></activity>
+        <activity android:name=".Activities.ReligionRestaurantActivity"
+            tools:ignore="InnerclassSeparator"/>
+        <activity android:name=".Activities.HalalExplainActivity"
+            tools:ignore="InnerclassSeparator"/>
+
+        <activity
+            android:name=".Activities.RestaurantDetailMapActivity"
+            android:configChanges="orientation|screenSize"
+            tools:ignore="InnerclassSeparator" />
     </application>
 
 </manifest>

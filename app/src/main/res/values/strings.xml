@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Froot B2C</string>
+    <string name="app_name">Froot</string>
 
     <!--API 관련-->
 
@@ -39,6 +39,9 @@
     <string name="zh_rTW" translatable="false">繁體</string>
     <!--언어-->
 
+    <!--할랄 설명-->
+
+    <!--할랄 설명-->
 
     <!--원화-->
     <string name="Won" translatable="false">\uFFE6</string>
@@ -56,22 +59,6 @@
     <!--식이 유형-->
 
 
-    <!--종교-->
-    <string name="muslim">Muslim</string>
-    <!--종교-->
-
-    <!--채식 유형-->
-    <string name="vegan">비건</string>
-    <string name="lacto">락토</string>
-    <string name="ovo">오보</string>
-    <string name="lacto_ovo">락토 오보</string>
-    <!--채식 유형-->
-
-
-    <string name="beef">소고기</string>
-    <string name="textView">" 영어"</string>
-
-
     <string name="button_exit">Exit</string>
     <string name="input_id">USERNAME</string>
     <string name="input_password">PASSWORD</string>
@@ -85,13 +72,19 @@
     <string name="text_signUp"> 아직 회원이 아니신가요? </string>
     <string name="button_signUp"> <u>회원 가입</u> </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="text_recommended_food">추천음식</string>
-
-    <string name="title_activity_fullscreen">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="text_halal_certified">Halal Certified</string>
+    <string name="text_self_certified">Self Certified</string>
+    <string name="text_muslim_friendly">Muslim Friendly</string>
+    <string name="text_pork_free">Pork Free</string>
+    <string name="content_halal_certified">할랄공식인증/ 운영자, 조리사 무슬림(최소 1인)/\\n 전체 할랄메뉴/ 알코올 미판매</string>
+    <string name="content_self_certified">자가인증/ 운영자, 조리사 무슬림 (최소 1인)/\\n 전체 할랄메뉴/ 알코올 미판매</string>
+    <string name="content_muslim_friendly">일부할랄메뉴/ 돼지고기 미취급</string>
+    <string name="content_pork_free">돼지고기 미취급</string>
+    <string name="toast_back_pressed">Press again to exit.</string>
+    <string name="title_category_activity">식이 유형</string>
+    <string name="title_restaurant_map">주변 식당 찾기</string>
+    <string name="title_halal_expain_activity">무슬림 친화 식당</string>
+    <string name="toast_multiple_choice">이 카테고리는 \"중복선택\"이 가능합니다</string>
 
 </resources>

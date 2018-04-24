@@ -8,7 +8,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,8 +51,7 @@ public class RestaurantListRecycleViewAdapter extends RecyclerView.Adapter<Resta
         holder.textView_restaurant_name.setText(restaurantList.get(position).getName());
         holder.textView_restaurant_category.setText(restaurantTypeList.get(restaurantList.get(position).getCategory()).getType());
         holder.textView_recommended_count.setText(String.format("%s개", restaurantList.get(position).getFoods().split(",").length));
-        Log.d("image width",  image_width + "");
-        Log.d("image height", image_height + "");
+
 
         if(!restaurantList.get(position).getImage_base64().isEmpty()) {
             holder.image_rastaurant.setImageBitmap(Bitmap.createScaledBitmap(getBitmapFromString(restaurantList.get(position).getImage_base64()), image_width, image_height, true));
@@ -78,7 +76,6 @@ public class RestaurantListRecycleViewAdapter extends RecyclerView.Adapter<Resta
         }
 
         holder.imageView_halal_mark.setImageResource(halal_mark_resource_id);
-
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

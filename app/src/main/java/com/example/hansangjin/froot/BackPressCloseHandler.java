@@ -26,24 +26,24 @@ public class BackPressCloseHandler {
             return;
         }
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
-//            toast.cancel();
-//            Intent t = new Intent(activity, MainActivity.class);
-//            activity.startActivity(t);
 
-//            activity.moveTaskToBack(true);
-//            activity.finish();
             activity.finishAffinity();
             android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
 
     public void showGuide() {
-        Toast ToastMessage = Toast.makeText(activity,"Change Toast Background color",Toast.LENGTH_SHORT);
-        View toastView = ToastMessage.getView();
-        toastView.setBackgroundResource(R.color.toast_background_color);
-        ToastMessage.show();
+        View toastView = View.inflate(activity, R.layout.toast_back_pressed, null);
 
-//        toast.show();
+        Toast toast = Toast.makeText(activity,"",Toast.LENGTH_SHORT);
+
+//
+        toast.setView(toastView);
+
+//        toast.setView(toastView);
+//        toast.getView().setBackground(R.drawable.toast_background_green);
+//        toast.getView().setBackgroundColor(activity.getResources().getColor(R.color.logoColor));
+        toast.show();
     }
 
     public void setToast(Toast toast){

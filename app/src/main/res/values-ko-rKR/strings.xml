@@ -18,5 +18,14 @@
     <string name="zh_rCN">简体</string>
     <string name="zh_rTW">繁體</string>
     <string name="religion">종교</string>
+    <string name="content_halal_certified">할랄공식인증/ 운영자, 조리사 무슬림(최소 1인)/\n전체 할랄메뉴/ 알코올 미판매</string>
+    <string name="content_self_certified">자가인증/ 운영자, 조리사 무슬림 (최소 1인)/\n전체 할랄메뉴/ 알코올 미판매</string>
+    <string name="content_muslim_friendly">일부할랄메뉴/ 돼지고기 미취급</string>
+    <string name="content_pork_free">돼지고기 미취급</string>
+    <string name="text_halal_certified">Halal Certified(할랄공식인증)</string>
+    <string name="text_self_certified">Self Certified(무슬림자가인증)</string>
+    <string name="text_muslim_friendly">Muslim Friendly(무슬림 프렌들리)</string>
+    <string name="text_pork_free">Pork Free(돼지고기 없음)</string>
+    <string name="toast_back_pressed">한번 더 누르시면 종료됩니다.</string>
 
 </resources>

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -94,10 +95,8 @@ public class RestaurantDetailActivity extends AppCompatActivity implements View.
 
         restaurant = intent.getParcelableExtra("restaurant");
         foods = restaurant.getFoods();
-        Log.d("ddddd", foods);
 
         locale = getResources().getConfiguration().locale;
-        Log.d("language", locale.getLanguage());
 
         if (locale.getLanguage().equals("ko")){
             locale_str = "ko";
@@ -131,6 +130,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements View.
         toolbar_left_image.setVisibility(View.VISIBLE);
         toolbar_left_image.setImageResource(R.drawable.ic_keyboard_arrow_left_black_48dp_w);
         toolbar_left_image.setOnClickListener(this);
+
+        toolbar_right_image.setVisibility(View.VISIBLE);
+        toolbar_right_image.setImageResource(R.drawable.ic_info_outline_black_36dp);
+        toolbar_right_image.setOnClickListener(this);
 
     }
 
@@ -176,6 +179,11 @@ public class RestaurantDetailActivity extends AppCompatActivity implements View.
     public void onClick(View v) {
         if(v == toolbar_left_image){
             onBackPressed();
+        }
+        else if(v == toolbar_right_image){
+            intent = new Intent(this, RestaurantDetailMapActivity.class);
+            intent.putExtra("restaurant", (Parcelable) restaurant);
+            ApplicationController.startActivity(this, intent);
         }
     }
 

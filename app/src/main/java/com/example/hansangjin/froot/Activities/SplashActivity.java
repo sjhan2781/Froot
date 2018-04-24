@@ -35,19 +35,22 @@ public class SplashActivity extends AppCompatActivity {
 
         ApplicationController.metrics = metrics;
 
-        Log.d("metrics", ApplicationController.metrics.toString());
 
         getHashKey();
 
+//
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
+//                ApplicationController.startActivity(SplashActivity.this, intent);
+//                finish();
+//            }
+//        },2000);
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
-                ApplicationController.startActivity(SplashActivity.this, intent);
-                finish();
-            }
-        },2000);
+        Intent intent = new Intent(getApplicationContext(), CategoryActivity.class);
+        ApplicationController.startActivity(SplashActivity.this, intent);
+        finish();
 
 //        handler.postDelayed(new Runnable() {
 //            @Override

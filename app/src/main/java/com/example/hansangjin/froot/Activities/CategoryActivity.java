@@ -113,7 +113,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         setSupportActionBar(toolbar);
 
         textView_title.setVisibility(View.VISIBLE);
-        textView_title.setText("식이유형");
+        textView_title.setText(R.string.title_category_activity);
 
         exit_button.setVisibility(View.VISIBLE);
         exit_button.setImageResource(R.drawable.ic_clear_black_36dp);
@@ -148,7 +148,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         toast = new Toast(getApplicationContext());
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
-        textView.setText("이 카테고리는 \"중복선택\"이 가능합니다");
+        textView.setText(R.string.toast_multiple_choice);
         toast.setView(view);
     }
 
@@ -168,6 +168,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         if (v == exit_button) {
             Intent intent = new Intent(getApplicationContext(), RestaurantListActivity.class);
+            intent.putExtra("selected_info", "[]");
             ApplicationController.startActivity(this, intent);
         } else if (v == register_button) {
             Intent intent;

@@ -31,7 +31,6 @@ public class HalalExplainActivity extends AppCompatActivity implements View.OnCl
 
     }
 
-
     private void setUpUI() {
         setUpToolbar();
     }
@@ -43,7 +42,7 @@ public class HalalExplainActivity extends AppCompatActivity implements View.OnCl
         toolbar_left_image = findViewById(R.id.toolbar_button_left);
         textView_title = findViewById(R.id.toolbar_textView_title);
 
-        textView_title.setText("무슬림 친화 레스토랑");
+        textView_title.setText(R.string.title_halal_expain_activity);
         textView_title.setVisibility(View.VISIBLE);
 
         toolbar_left_image.setVisibility(View.VISIBLE);

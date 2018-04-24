@@ -86,6 +86,8 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
 
         selected_info = selected_info.substring(1, selected_info.length()-1);
 
+        Log.d("asdasd", selected_info);
+
         toolbar_left_image = findViewById(R.id.toolbar_button_left);
         toolbar_right_image = findViewById(R.id.toolbar_button_right);
         bottomSheet = findViewById(R.id.design_bottom_sheet);
@@ -101,7 +103,6 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
         backPressCloseHandler = new BackPressCloseHandler(this);
 
         locale = getResources().getConfiguration().locale;
-        Log.d("language", locale.getLanguage());
 
         if (locale.getLanguage().equals("ko")){
             locale_str = "ko";
@@ -154,7 +155,7 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
     public void onClick(View v) {
         if (v == toolbar_right_image) {
             intent = new Intent(this, RestaurantMapActivity.class);
-//            intent.putExtra("restaurants", restaurantList);
+            intent.putExtra("restaurants", restaurantList);
             ApplicationController.startActivity(this, intent);
         } else if (v == toolbar_left_image) {
             ApplicationController.finish(this);
@@ -314,7 +315,6 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
 
                     OutputStream os = con.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8")); //캐릭터셋 설정
-                    Log.d("asdasdas", "lang=" + locale_str + "&location=" + curLocation.getId() + "&select=" + selected_info);
                     writer.write("lang=" + locale_str + "&location=" + curLocation.getId() + "&select=" + selected_info); //요청 파라미터를 입력
 //                    writer.write("lang=" + locale_str); //요청 파라미터를 입력
 
@@ -408,8 +408,8 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
                 restaurant.setCategory(c.getInt("category"));
                 restaurant.setAddress(c.getString("address"));
                 restaurant.setTelephone(c.getString("telephone"));
-                restaurant.setMapx(c.getInt("lat"));
-                restaurant.setMapy( c.getInt("lng"));
+                restaurant.setMapx(c.getDouble("lat"));
+                restaurant.setMapy( c.getDouble("lng"));
                 restaurant.setHalal(c.getInt("halal"));
                 restaurant.setImage_base64(c.getString("image_base64"));
                 restaurant.setFoods(c.getString("foods"));
@@ -417,22 +417,12 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
                 restaurantList.add(new ParcelableRestaurant(restaurant));
             }
 
+            Log.d("asdad", restaurantList.toString());
+
             setUpUI();
 
         } catch (Exception e) {
 
-        }
-    }
-
-    public void showToast() {
-        if (toast != null) {
-            toast.show();
-        }
-    }
-
-    public void dismissToast() {
-        if (toast != null) {
-            toast.cancel();
         }
     }
 

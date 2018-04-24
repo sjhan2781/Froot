@@ -1,15 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="@drawable/vertical_line"
+    android:orientation="vertical"
+    android:showDividers="middle|end"
     tools:context="com.example.hansangjin.froot.Activities.HalalExplainActivity">
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/layout_toolbar"/>
+        layout="@layout/layout_toolbar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imageView_halal_certified"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/image_halal_certified" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView_halal_certified"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/imageView_halal_certified"
+            android:gravity="center_vertical|start"
+            android:text="@string/text_halal_certified"
+            android:textAlignment="gravity"
+            android:textColor="@color/textColor_black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView_halal_certified"
+            android:layout_marginTop="5dp"
+            android:text="@string/content_halal_certified"
+            android:textColor="#54000000"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imageView_self_certified"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/image_self_certified" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView_self_certified"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/imageView_self_certified"
+            android:gravity="center_vertical|start"
+            android:text="@string/text_self_certified"
+            android:textAlignment="gravity"
+            android:textColor="@color/textColor_black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView_self_certified"
+            android:layout_marginTop="5dp"
+            android:text="@string/content_self_certified"
+            android:textColor="#54000000"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imageView_muslim_friendly"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/image_muslim_friendly" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView_muslim_friendly"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/imageView_muslim_friendly"
+            android:gravity="center_vertical|start"
+            android:text="@string/text_muslim_friendly"
+            android:textAlignment="gravity"
+            android:textColor="@color/textColor_black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView_muslim_friendly"
+            android:layout_marginTop="5dp"
+            android:text="@string/content_muslim_friendly"
+            android:textColor="#54000000"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imageView_pork_free"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/image_pork_free" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView_pork_free"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/imageView_pork_free"
+            android:gravity="center_vertical|start"
+            android:text="@string/text_pork_free"
+            android:textAlignment="gravity"
+            android:textColor="@color/textColor_black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView_pork_free"
+            android:layout_marginTop="5dp"
+            android:text="@string/content_pork_free"
+            android:textColor="#54000000"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
 
 
 </LinearLayout>
