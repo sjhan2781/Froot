@@ -6,11 +6,6 @@
     <string name="vegan">비건</string>
     <string name="lacto">락토</string>
     <string name="lacto_ovo">락토 오보</string>
-    <string name="ko">한국어</string>
-    <string name="ja">日本語</string>
-    <string name="en">English</string>
-    <string name="zh_rCN">简体</string>
-    <string name="zh_rTW">繁體</string>
     <string name="content_halal_certified">할랄공식인증/ 운영자, 조리사 무슬림(최소 1인)/\n전체 할랄메뉴/ 알코올 미판매</string>
     <string name="content_self_certified">자가인증/ 운영자, 조리사 무슬림 (최소 1인)/\n전체 할랄메뉴/ 알코올 미판매</string>
     <string name="content_muslim_friendly">일부할랄메뉴/ 돼지고기 미취급</string>
@@ -20,4 +15,12 @@
     <string name="text_muslim_friendly">Muslim Friendly(무슬림 프렌들리)</string>
     <string name="text_pork_free">Pork Free(돼지고기 없음)</string>
     <string name="toast_back_pressed">한번 더 누르시면 종료됩니다.</string>
+    <string name="text_agree">동의</string>
+    <string name="content_terms_of_service">Froot는 식품의약처 및 한국관광공사의 정보를 바탕으로 음식 선별 서비스를 제공합니다. 모든 식재료 정보를 포함하지 않을 수 있습니다.</string>
+    <string name="content_terms_of_service_warning">*식품접객업소 환경에 따라 비의도적 혼입가능성이 있으므로 서비스 이용에 참고하여 주시기 바랍니다.</string>
+    <string name="text_preparing_image">이미지 준비중</string>
+    <string name="text_service_area">서비스 가능 지역</string>
+    <string name="text_selected">선택 완료</string>
+    <string name="app_name">Froot</string>
+    <string name="title_halal_expain_activity">무슬림 친화 레스토랑</string>
 </resources>

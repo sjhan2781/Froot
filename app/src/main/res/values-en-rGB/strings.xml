@@ -4,18 +4,26 @@
     <string name="restaurant_image">restaurant image</string>
     <string name="store_name">store name</string>
     <string name="store_locale">locale</string>
-    <string name="beef">beef</string>
-    <string name="textView">영어</string>
     <string name="vegetarian">Vegeterian</string>
     <string name="allergy">Allergy</string>
     <string name="vegan">Vegan</string>
     <string name="lacto">Lacto</string>
     <string name="lacto_ovo">Lacto ovo</string>
     <string name="muslim">Muslim</string>
-    <string name="ko">한국어</string>
-    <string name="ja">日本語</string>
-    <string name="en">English</string>
-    <string name="zh_rCN">简体</string>
-    <string name="zh_rTW">繁體</string>
+    <string name="text_agree">Agree</string>
+    <string name="title_halal_expain_activity">Muslim-friendly restaurant</string>
+    <string name="text_halal_certified">Halal official certification</string>
+    <string name="text_self_certified">Muslim self-certified</string>
+    <string name="text_muslim_friendly">Muslim Friendlies</string>
+    <string name="text_pork_free">No pork</string>
+    <string name="content_halal_certified">Halal official certification/ Operator and cook Muslim (at least 1 person)/ Full Halal Menu/ Alcohol not sold</string>
+    <string name="content_self_certified">Muslim self-certified/ Operator and cook Muslim (at least 1 person)/ Full Halal Menu/ Alcohol not sold</string>
+    <string name="content_muslim_friendly">Some Halal Menus/ Pork untreated</string>
+    <string name="content_pork_free">Pork untreated</string>
+    <string name="content_terms_of_service">Froot offers food screening services based on information from the Food and Drug Administration and the Korea Tourism Organization. All ingredients may not be included.</string>
+    <string name="content_terms_of_service_warning">*Please note that there may be unintentional interference depending on the restaurant environment.</string>
+    <string name="text_preparing_image">Preparing image</string>
+    <string name="text_service_area">Service Area</string>
+    <string name="text_selected">Selected</string>
 
 </resources>

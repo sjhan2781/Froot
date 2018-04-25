@@ -242,7 +242,7 @@ public class RestaurantDetailMapActivity extends AppCompatActivity implements Vi
         LatLng latLng = new LatLng(restaurant.getMapx(), restaurant.getMapy());
         markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_facebook_login_9)));
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.map_noclick)));
 
         marker = googleMap.addMarker(markerOptions);
         marker.setTag(restaurant);
@@ -251,7 +251,7 @@ public class RestaurantDetailMapActivity extends AppCompatActivity implements Vi
         selected_index = 0;
 
 
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_kakao_login_11)));
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.map_click)));
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
 
     }

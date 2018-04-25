@@ -35,11 +35,6 @@
         android:layout_below="@+id/toolbar"
         android:groupIndicator="@null" />
 
-    <ImageView
-        android:id="@+id/json_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/expandableListView"/>
 
 
 </RelativeLayout>

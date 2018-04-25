@@ -3,17 +3,25 @@
 
     <string name="restaurant_image">식당 이미지</string>
     <string name="store_name">식당 이름</string>
-    <string name="beef">소고기</string>
-    <string name="textView">일본어</string>
-    <string name="ko">한국어</string>
-    <string name="ja">日本語</string>
-    <string name="en">English</string>
-    <string name="zh_rCN">简体</string>
-    <string name="zh_rTW">繁體</string>
     <string name="muslim">イスラム教徒</string>
     <string name="vegetarian">ベジタリアン</string>
     <string name="allergy">アレルギー</string>
     <string name="vegan">完全なベジタリアン</string>
     <string name="lacto">ラクト</string>
+    <string name="text_halal_certified">Halal official certification</string>
+    <string name="text_self_certified">Muslim self-certified</string>
+    <string name="text_muslim_friendly">Muslim Friendlies</string>
+    <string name="text_pork_free">No pork</string>
+    <string name="content_halal_certified">Halal official certification/ Operator and cook Muslim (at least 1 person)/ Full Halal Menu/ Alcohol not sold</string>
+    <string name="content_self_certified">Muslim self-certified/ Operator and cook Muslim (at least 1 person)/ Full Halal Menu/ Alcohol not sold</string>
+    <string name="content_muslim_friendly">Some Halal Menus/ Pork untreated</string>
+    <string name="content_pork_free">Pork untreated</string>
+    <string name="content_terms_of_service">"Frootは 食品医薬品先及び韓国観光公社の 情報をもとにフード選別サービスを 提供します すべての食材の情報を含まれていない可能性があります "</string>
+    <string name="content_terms_of_service_warning">*食品ホスピタリティの事情に応じて 非意図的な混入の可能性がありますので  サービス利用に参考にしてください</string>
+    <string name="text_agree">同意</string>
+    <string name="text_preparing_image">イメージ準備中</string>
+    <string name="text_service_area">サービス可能地域</string>
+    <string name="text_selected">選択完了</string>
+    <string name="title_halal_expain_activity">Muslim-friendly restaurant</string>
 
 </resources>

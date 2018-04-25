@@ -1,6 +1,8 @@
 package com.example.hansangjin.froot.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.example.hansangjin.froot.Adapter.CategoryExpandableListViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.BackPressCloseHandler;
+import com.example.hansangjin.froot.CustomView.AgreementDialog;
 import com.example.hansangjin.froot.Data.CategoryDetail;
 import com.example.hansangjin.froot.Data.CategoryMain;
 import com.example.hansangjin.froot.R;
@@ -47,7 +50,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
     private BackPressCloseHandler backPressCloseHandler;
 
-
     private ArrayList<CategoryMain> categories;
 
     private static Toast toast = null;
@@ -56,6 +58,10 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
     private Locale locale;
     private String locale_str;
+
+    private SharedPreferences sp;
+
+    private boolean agreement = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,21 +97,22 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         locale = getResources().getConfiguration().locale;
         Log.d("language", locale.getLanguage());
 
-        if (locale.getLanguage().equals("ko")){
+        if (locale.getLanguage().equals("ko")) {
             locale_str = "ko";
-        }
-        else if (locale.getLanguage().equals("ja")){
+        } else if (locale.getLanguage().equals("ja")) {
             locale_str = "ja";
-        }
-        else if (locale.getLanguage().equals("rCN")){
+        } else if (locale.getLanguage().equals("rCN")) {
             locale_str = "rCN";
-        }
-        else if (locale.getLanguage().equals("rTW")){
+        } else if (locale.getLanguage().equals("rTW")) {
             locale_str = "rTW";
-        }
-        else {
+        } else {
             locale_str = "en";
         }
+
+        sp = getSharedPreferences("frootAgreement", Activity.MODE_PRIVATE);
+
+        agreement = sp.getBoolean("agreement", false);
+
     }
 
     private void setUpToolbar() {
@@ -166,22 +173,21 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
+
         if (v == exit_button) {
             Intent intent = new Intent(getApplicationContext(), RestaurantListActivity.class);
             intent.putExtra("selected_info", "[]");
             ApplicationController.startActivity(this, intent);
         } else if (v == register_button) {
-            Intent intent;
-            if (categoryExpandableListViewAdapter.getSelectedCategory().getId() == CATEGORY_RELIGION) {
-                intent = new Intent(getApplicationContext(), ReligionRestaurantActivity.class);
-            } else {
-                intent = new Intent(getApplicationContext(), RestaurantListActivity.class);
-//                intent.putExtra("ingredients");
-            }
-            Log.d("selected", categoryExpandableListViewAdapter.getSelectedCategory().getDetails().toString());
+            if (!agreement) {
+                AgreementDialog agreementDialog = new AgreementDialog(this, sp);
 
-            intent.putExtra("selected_info", categoryExpandableListViewAdapter.getSelectedCategory().getDetails().toString());
-            ApplicationController.startActivity(this, intent);
+                agreementDialog.show();
+            } else {
+                goToNextActivity();
+            }
+
+
         }
 
     }
@@ -213,7 +219,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
                 JSONArray tmpJSONArray = c.getJSONArray("category_details");
 
-                for (int j = 0; j < tmpJSONArray.length(); j++){
+                for (int j = 0; j < tmpJSONArray.length(); j++) {
                     JSONObject tmpObj = tmpJSONArray.getJSONObject(j);
                     CategoryDetail detail = new CategoryDetail(tmpObj.getInt("detail_id"), tmpObj.getString("detail_str"));
                     tmpDetailList.add(detail);
@@ -292,4 +298,15 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         g.execute(url);
     }
 
+    public void goToNextActivity() {
+        Intent intent;
+        if (categoryExpandableListViewAdapter.getSelectedCategory().getId() == CATEGORY_RELIGION) {
+            intent = new Intent(getApplicationContext(), ReligionRestaurantActivity.class);
+        } else {
+            intent = new Intent(getApplicationContext(), RestaurantListActivity.class);
+        }
+
+        intent.putExtra("selected_info", categoryExpandableListViewAdapter.getSelectedCategory().getDetails().toString());
+        ApplicationController.startActivity(this, intent);
+    }
 }

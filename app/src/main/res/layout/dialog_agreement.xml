@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textView_terms_of_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="10dp"
+        android:text="@string/content_terms_of_service"
+        android:textColor="@color/textColor_black"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/textView_terms_of_service_warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView_terms_of_service"
+        android:paddingBottom="10dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:text="@string/content_terms_of_service_warning"
+        android:textColor="@color/textColor_black"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/button_agree"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView_terms_of_service_warning"
+        android:text="@string/text_agree"
+        android:textColor="@color/textColor"
+        android:background="@color/button_background_color"
+        android:textSize="19sp"/>
+
+</RelativeLayout>

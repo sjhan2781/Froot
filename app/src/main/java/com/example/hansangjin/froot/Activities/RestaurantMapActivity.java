@@ -243,8 +243,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
             LatLng latLng = new LatLng(restaurant.getMapx(), restaurant.getMapy());
             markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_facebook_login_9)));
-
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.map_noclick)));
 
             marker = googleMap.addMarker(markerOptions);
             marker.setTag(restaurant);
@@ -255,7 +254,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
         selected_index = 0;
 
         if(!markers.isEmpty()) {
-            markers.get(selected_index).setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_kakao_login_11)));
+            markers.get(selected_index).setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.map_click)));
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
         }
     }
@@ -264,13 +263,13 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
         if (position != selected_index) {
             Marker marker = markers.get(selected_index);
 
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_facebook_login_9)));
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.map_noclick)));
             marker.setZIndex(1.0f);
 
             selected_index = position;
             marker = markers.get(selected_index);
 
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.button_kakao_login_11)));
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.map_click)));
             marker.setZIndex(2.0f);
         }
     }
