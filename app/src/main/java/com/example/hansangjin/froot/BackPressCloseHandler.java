@@ -40,9 +40,6 @@ public class BackPressCloseHandler {
 //
         toast.setView(toastView);
 
-//        toast.setView(toastView);
-//        toast.getView().setBackground(R.drawable.toast_background_green);
-//        toast.getView().setBackgroundColor(activity.getResources().getColor(R.color.logoColor));
         toast.show();
     }
 

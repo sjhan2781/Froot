@@ -27,7 +27,7 @@ public class AgreementDialog extends Dialog implements View.OnClickListener {
     public AgreementDialog(@NonNull CategoryActivity activity, SharedPreferences sp) {
         super(activity);
         this.activity = activity;
-
+        this.sp = sp;
     }
 
     @Override
@@ -45,6 +45,7 @@ public class AgreementDialog extends Dialog implements View.OnClickListener {
         if (v == button_agree){
             SharedPreferences.Editor editor = sp.edit();
             editor.putBoolean("agreement", true);
+            editor.apply();
             dismiss();
             activity.goToNextActivity();
         }

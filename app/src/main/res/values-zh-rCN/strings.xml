@@ -1,12 +1,6 @@
 <resources>
     <string name="app_name">Froot</string>
 
-    <string name="restaurant_image">식당 이미지</string>
-    <string name="store_name">식당 이름</string>
-    <string name="store_locale">지역</string>
-    <string name="muslim">穆斯林</string>
-    <string name="vegetarian">素食者</string>
-    <string name="allergy">食物过敏种类</string>
     <string name="text_halal_certified">Halal official certification</string>
     <string name="text_self_certified">Muslim self-certified</string>
     <string name="text_muslim_friendly">Muslim Friendlies</string>
@@ -22,5 +16,11 @@
     <string name="text_service_area">有效服务区</string>
     <string name="text_selected">选完</string>
     <string name="title_halal_expain_activity">Muslim-friendly restaurant</string>
+    <string name="toast_back_pressed">再按一次退出。</string>
+    <string name="toast_multiple_choice">您可以选择一个或多个此类别的选项</string>
+    <string name="title_restaurant_map">附近的餐馆</string>
+    <string name="title_category_activity">膳食类型</string>
+    <string name="text_recommended_food">推荐饮食</string>
+    <string name="text_restaurant_recommendation">餐厅推荐</string>
 
 </resources>

@@ -21,7 +21,7 @@
         android:background="@drawable/button_recognize_selector"
         android:elevation="2dp"
         android:gravity="center"
-        android:text="음식점 추천"
+        android:text="@string/text_restaurant_recommendation"
         android:textAlignment="center"
         android:textColor="@color/register_button_text_selector"
         android:textSize="19sp"

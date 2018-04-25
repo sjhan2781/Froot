@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="vegetarian">Vegeterian</string>
-    <string name="allergy">Allergy</string>
-    <string name="vegan">Vegan</string>
-    <string name="lacto">Lacto</string>
-    <string name="lacto_ovo">Lacto ovo</string>
-    <string name="muslim">Muslim</string>
     <string name="text_agree">Agree</string>
     <string name="title_halal_expain_activity">Muslim-friendly restaurant</string>
     <string name="text_halal_certified">Halal official certification</string>
@@ -22,4 +16,10 @@
     <string name="text_service_area">Service Area</string>
     <string name="text_selected">Selected</string>
     <string name="app_name">Froot</string>
+    <string name="toast_back_pressed">Press again to exit.</string>
+    <string name="toast_multiple_choice">you can choose one or more options in this category</string>
+    <string name="title_category_activity">Dietary type</string>
+    <string name="title_restaurant_map">Nearby restaurants</string>
+    <string name="text_recommended_food">Recommended food</string>
+    <string name="text_restaurant_recommendation">Restaurant recommendation</string>
 </resources>

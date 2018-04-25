@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="muslim">무슬림</string>
-    <string name="vegetarian">채식주의</string>
-    <string name="allergy">알레르기</string>
-    <string name="vegan">비건</string>
-    <string name="lacto">락토</string>
-    <string name="lacto_ovo">락토 오보</string>
     <string name="content_halal_certified">할랄공식인증/ 운영자, 조리사 무슬림(최소 1인)/\n전체 할랄메뉴/ 알코올 미판매</string>
     <string name="content_self_certified">자가인증/ 운영자, 조리사 무슬림 (최소 1인)/\n전체 할랄메뉴/ 알코올 미판매</string>
     <string name="content_muslim_friendly">일부할랄메뉴/ 돼지고기 미취급</string>
@@ -23,4 +17,9 @@
     <string name="text_selected">선택 완료</string>
     <string name="app_name">Froot</string>
     <string name="title_halal_expain_activity">무슬림 친화 레스토랑</string>
+    <string name="toast_multiple_choice">이 카테고리는 중복선택이 가능합니다</string>
+    <string name="title_restaurant_map">주변 식당 찾기</string>
+    <string name="title_category_activity">식이유형</string>
+    <string name="text_recommended_food">추천음식</string>
+    <string name="text_restaurant_recommendation">음식점 추천</string>
 </resources>

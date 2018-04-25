@@ -1,13 +1,6 @@
 <resources>
     <string name="app_name">Froot</string>
 
-    <string name="restaurant_image">식당 이미지</string>
-    <string name="store_name">식당 이름</string>
-    <string name="muslim">イスラム教徒</string>
-    <string name="vegetarian">ベジタリアン</string>
-    <string name="allergy">アレルギー</string>
-    <string name="vegan">完全なベジタリアン</string>
-    <string name="lacto">ラクト</string>
     <string name="text_halal_certified">Halal official certification</string>
     <string name="text_self_certified">Muslim self-certified</string>
     <string name="text_muslim_friendly">Muslim Friendlies</string>
@@ -23,5 +16,11 @@
     <string name="text_service_area">サービス可能地域</string>
     <string name="text_selected">選択完了</string>
     <string name="title_halal_expain_activity">Muslim-friendly restaurant</string>
+    <string name="toast_back_pressed">もう一度押すと終了します。</string>
+    <string name="toast_multiple_choice">このカテゴリで1つまたは複数のオプションを選択できます</string>
+    <string name="title_category_activity">食事タイプ</string>
+    <string name="title_restaurant_map">近くのレストラン</string>
+    <string name="text_recommended_food">おすすめ料理</string>
+    <string name="text_restaurant_recommendation">飲食店おすすめ</string>
 
 </resources>

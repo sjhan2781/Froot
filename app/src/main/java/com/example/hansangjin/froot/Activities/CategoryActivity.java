@@ -111,7 +111,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
         sp = getSharedPreferences("frootAgreement", Activity.MODE_PRIVATE);
 
-        agreement = sp.getBoolean("agreement", false);
 
     }
 
@@ -127,7 +126,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void setUpData() {
-        getData("http://"+ ApplicationController.getServerIP() + "category_activity.php");
+        getData("http://"+ ApplicationController.getServerIP() + "/category_activity.php");
 
 //        setUpUI();
     }
@@ -179,6 +178,8 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
             intent.putExtra("selected_info", "[]");
             ApplicationController.startActivity(this, intent);
         } else if (v == register_button) {
+            agreement = sp.getBoolean("agreement", false);
+
             if (!agreement) {
                 AgreementDialog agreementDialog = new AgreementDialog(this, sp);
 

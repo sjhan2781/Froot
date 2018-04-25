@@ -47,15 +47,13 @@
     <string name="Won" translatable="false">\uFFE6</string>
     <!--원화-->
 
-    <string name="restaurant_image">식당 이미지</string>
-    <string name="store_name">식당 이름</string>
-    <string name="store_locale">지역</string>
+    <string name="restaurant_image" translatable="false">식당 이미지</string>
+    <string name="store_name" translatable="false">식당 이름</string>
+    <string name="store_locale" translatable="false">지역</string>
 
 
     <!--식이 유형-->
     <string name="religion" translatable="false">Religion</string>
-    <string name="vegetarian">Vegeterian</string>
-    <string name="allergy">Allergy</string>
     <!--식이 유형-->
 
 
@@ -69,28 +67,29 @@
     <string name="description_facebook_image" translatable="false">Facebook Login Image</string>
     <string name="description_kakao_image" translatable="false">Kakao Login Image</string>
 
-    <string name="text_signUp"> 아직 회원이 아니신가요? </string>
-    <string name="button_signUp"> <u>회원 가입</u> </string>
+    <string name="text_signUp" translatable="false"> 아직 회원이 아니신가요? </string>
+    <string name="button_signUp" translatable="false"> <u>회원 가입</u> </string>
 
-    <string name="text_recommended_food">추천음식</string>
+    <string name="text_recommended_food">Recommended food</string>
     <string name="text_halal_certified">Halal official certification</string>
     <string name="text_self_certified">Muslim self-certified</string>
     <string name="text_muslim_friendly">Muslim Friendly</string>
     <string name="text_pork_free">Pork Free</string>
-    <string name="content_halal_certified">할랄공식인증/ 운영자, 조리사 무슬림(최소 1인)/\\n 전체 할랄메뉴/ 알코올 미판매</string>
-    <string name="content_self_certified">자가인증/ 운영자, 조리사 무슬림 (최소 1인)/\\n 전체 할랄메뉴/ 알코올 미판매</string>
-    <string name="content_muslim_friendly">일부할랄메뉴/ 돼지고기 미취급</string>
-    <string name="content_pork_free">돼지고기 미취급</string>
+    <string name="content_halal_certified">Halal official certification/ Operator and cook Muslim (at least 1 person)/ Full Halal Menu/ Alcohol not sold</string>
+    <string name="content_self_certified">Muslim self-certified/ Operator and cook Muslim (at least 1 person)/ Full Halal Menu/ Alcohol not sold</string>
+    <string name="content_muslim_friendly">Some Halal Menus/ Pork untreated</string>
+    <string name="content_pork_free">Pork untreated</string>
     <string name="toast_back_pressed">Press again to exit.</string>
-    <string name="title_category_activity">식이 유형</string>
-    <string name="title_restaurant_map">주변 식당 찾기</string>
-    <string name="title_halal_expain_activity">무슬림 친화 식당</string>
-    <string name="toast_multiple_choice">이 카테고리는 \"중복선택\"이 가능합니다</string>
+    <string name="title_halal_expain_activity">Muslim-friendly restaurant</string>
     <string name="text_agree">Agree</string>
     <string name="content_terms_of_service">Froot offers food screening services based on information from the Food and Drug Administration and the Korea Tourism Organization. All ingredients may not be included.</string>
     <string name="content_terms_of_service_warning">*Please note that there may be unintentional interference depending on the restaurant environment.</string>
     <string name="text_preparing_image">Preparing image</string>
     <string name="text_service_area">Service Area</string>
     <string name="text_selected">Selected</string>
+    <string name="toast_multiple_choice">you can choose one or more options in this category</string>
+    <string name="title_category_activity">Dietary type</string>
+    <string name="title_restaurant_map">Nearby restaurants</string>
+    <string name="text_restaurant_recommendation">Restaurant recommendation</string>
 
 </resources>
