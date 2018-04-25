@@ -315,6 +315,8 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
 
                     OutputStream os = con.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8")); //캐릭터셋 설정
+                    Log.d("Aaaa", "lang=" + locale_str + "&location=" + curLocation.getId() + "&select=" + selected_info); //요청 파라미터를 입력
+
                     writer.write("lang=" + locale_str + "&location=" + curLocation.getId() + "&select=" + selected_info); //요청 파라미터를 입력
 //                    writer.write("lang=" + locale_str); //요청 파라미터를 입력
 

@@ -138,7 +138,7 @@ public class RestaurantDetailActivity extends AppCompatActivity implements View.
     }
 
     private void setUpData(){
-        getFoodData("http://froot.iptime.org:8080/restaurantDetail_activity.php");
+        getFoodData("http://" + ApplicationController.getServerIP() + "/restaurantDetail_activity.php");
     }
 
     private void setUpUI(){

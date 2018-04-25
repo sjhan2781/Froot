@@ -37,7 +37,6 @@ public class BackPressCloseHandler {
 
         Toast toast = Toast.makeText(activity,"",Toast.LENGTH_SHORT);
 
-//
         toast.setView(toastView);
 
         toast.show();
