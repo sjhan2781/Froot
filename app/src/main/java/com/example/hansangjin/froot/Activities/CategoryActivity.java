@@ -127,7 +127,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void setUpData() {
-        getData("http://froot.iptime.org:8080/category_activity.php");
+        getData("http://"+ ApplicationController.getServerIP() + "category_activity.php");
 
 //        setUpUI();
     }

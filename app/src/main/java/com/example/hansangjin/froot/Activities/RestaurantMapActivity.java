@@ -363,7 +363,6 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
             recyclerViewAdapter.notifyDataSetChanged();
 
         } else {
-            Log.d("aaaaaaaaaaa", "Current location is null. Using defaults.");
             if (!restaurantList.isEmpty()) {
                 setMarkers(0);
             }

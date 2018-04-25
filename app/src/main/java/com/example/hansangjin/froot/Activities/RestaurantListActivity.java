@@ -122,7 +122,7 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
     }
 
     private void setUpData() {
-        getLocationData("http://froot.iptime.org:8080/getLocation.php");
+        getLocationData("http://" + ApplicationController.getServerIP() + "/getLocation.php");
     }
 
     private void setUpUI() {
@@ -217,7 +217,7 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
     public void setLocation(int position) {
         textView_title.setText(locationList.get(position).getLocation());
 
-        getRestaurantData("http://froot.iptime.org:8080/restaurantList_activity.php", locationList.get(position));
+        getRestaurantData("http://" + ApplicationController.getServerIP() + "/restaurantList_activity.php", locationList.get(position));
     }
 
     private void setUpToast() {

@@ -104,7 +104,7 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
     }
 
     private void setUpData() {
-        getRestaurantData("http://froot.iptime.org:8080/religionRestaurantList_activity.php");
+        getRestaurantData("http://" + ApplicationController.getServerIP() + "/religionRestaurantList_activity.php");
     }
 
     private void setUpUI() {
