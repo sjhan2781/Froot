@@ -1,7 +1,8 @@
 package com.example.hansangjin.froot.Listener;
 
+import android.util.Log;
+
 import com.example.hansangjin.froot.Activities.RestaurantMapActivity;
-import com.example.hansangjin.froot.Data.Restaurant;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
@@ -18,8 +19,8 @@ public class MapMarkerClickListener implements GoogleMap.OnMarkerClickListener {
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        activity.setSelectedChild(((Restaurant) marker.getTag()).getID());
-
+        activity.setSelectedChild((Integer.parseInt(marker.getTitle())));
+        Log.d("TTAAAGGG", String.valueOf(Integer.parseInt(marker.getTitle())));
         return true;
     }
 }

@@ -23,6 +23,7 @@ import com.example.hansangjin.froot.Adapter.CustomPagerAdapter;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.BackPressCloseHandler;
 import com.example.hansangjin.froot.CustomView.MyBottomSheetDialogFragment;
+import com.example.hansangjin.froot.CustomView.NoDataDialog;
 import com.example.hansangjin.froot.CustomView.RecyclerViewFragment;
 import com.example.hansangjin.froot.Data.Location;
 import com.example.hansangjin.froot.Data.Restaurant;
@@ -123,6 +124,7 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
 
     private void setUpData() {
         getLocationData("http://" + ApplicationController.getServerIP() + "/getLocation.php");
+
     }
 
     private void setUpUI() {
@@ -216,7 +218,6 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
 
     public void setLocation(int position) {
         textView_title.setText(locationList.get(position).getLocation());
-
         getRestaurantData("http://" + ApplicationController.getServerIP() + "/restaurantList_activity.php", locationList.get(position));
     }
 
@@ -419,9 +420,13 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
                 restaurantList.add(new ParcelableRestaurant(restaurant));
             }
 
-            Log.d("asdad", restaurantList.toString());
-
-            setUpUI();
+            if(restaurantList.isEmpty()){
+                NoDataDialog noDataDialog = new NoDataDialog(this);
+                noDataDialog.show();
+            }
+            else{
+                setUpUI();
+            }
 
         } catch (Exception e) {
 

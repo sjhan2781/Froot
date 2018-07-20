@@ -15,6 +15,7 @@ import com.example.hansangjin.froot.Activities.RestaurantMapActivity;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
 import com.example.hansangjin.froot.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -67,7 +68,10 @@ public class RestaurantMapRecyclerViewAdapter extends RecyclerView.Adapter<Resta
 
 
         if(!restaurantList.get(position).getImage_base64().isEmpty()) {
-            holder.imageView_restaurant.setImageBitmap(Bitmap.createScaledBitmap(getBitmapFromString(restaurantList.get(position).getImage_base64()), image_width, image_height, true));
+//            holder.imageView_restaurant.setImageBitmap(Bitmap.createScaledBitmap(getBitmapFromString(restaurantList.get(position).getImage_base64()), image_width, image_height, true));
+            Picasso.get().load("http://" + ApplicationController.getServerIP() + "/" + restaurantList.get(position).getImage_base64())         // 로드할 이미지 경로(로컬 이미지도 가능)
+                    .fit()
+                    .into(holder.imageView_restaurant);   // 이미지를 담을 ImageView
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +126,6 @@ public class RestaurantMapRecyclerViewAdapter extends RecyclerView.Adapter<Resta
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-
 
         private TextView textView_restaurant_name, textView_restaurant_category,
                 textView_restaurant_phonenumber, textView_restaurant_distance, textView_restaurant_address;

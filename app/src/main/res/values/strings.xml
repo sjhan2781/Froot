@@ -91,5 +91,6 @@
     <string name="title_category_activity">Dietary type</string>
     <string name="title_restaurant_map">Nearby restaurants</string>
     <string name="text_restaurant_recommendation">Restaurant recommendation</string>
+    <string name="text_no_data">No Data</string>
 
 </resources>

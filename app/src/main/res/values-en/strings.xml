@@ -22,4 +22,5 @@
     <string name="title_restaurant_map">Nearby restaurants</string>
     <string name="text_recommended_food">Recommended food</string>
     <string name="text_restaurant_recommendation">Restaurant recommendation</string>
+    <string name="text_no_data">No Data</string>
 </resources>

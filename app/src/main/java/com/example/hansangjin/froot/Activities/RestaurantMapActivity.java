@@ -51,6 +51,8 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
 
     private final int LOCATION_PERMISSION_REQUEST_CODE = 0;
 
+    private final float ZOOM_LEVEL = 18;
+
     private Intent intent;
     private boolean mLocationPermissionGranted;
 
@@ -232,12 +234,14 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
         if (!markers.isEmpty()) {
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(markers.get(position).getPosition()));
             setMarkers(position);
+            recyclerView.smoothScrollToPosition(position);
         }
     }
 
     private void initMarkers() {
         Marker marker;
         MarkerOptions markerOptions;
+        int index = 0;
 
         for (ParcelableRestaurant restaurant : restaurantList) {
             LatLng latLng = new LatLng(restaurant.getMapx(), restaurant.getMapy());
@@ -246,7 +250,8 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.map_noclick)));
 
             marker = googleMap.addMarker(markerOptions);
-            marker.setTag(restaurant);
+//            marker.setTag(index++);
+            marker.setTitle(String.valueOf(index++));
 
             markers.add(marker);
         }
@@ -255,7 +260,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
 
         if(!markers.isEmpty()) {
             markers.get(selected_index).setIcon(BitmapDescriptorFactory.fromBitmap(ApplicationController.setUpImage(R.drawable.map_click)));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(markers.get(0).getPosition(), ZOOM_LEVEL));
         }
     }
 
@@ -278,7 +283,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
         if (position != selected_index) {
             Marker marker = markers.get(position);
 
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), ZOOM_LEVEL));
             setMarkers(position);
         }
     }
@@ -288,7 +293,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
         this.googleMap = googleMap;
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.56, 126.97)));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_LEVEL));     //v는 카메라 줌레벨, 숫자 높을수록 커짐
 
         googleMap.setOnMarkerClickListener(new MapMarkerClickListener(this));
 
@@ -344,7 +349,7 @@ public class RestaurantMapActivity extends AppCompatActivity implements View.OnC
         } else if (myLocation != null) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(myLocation.getLatitude(),
-                            myLocation.getLongitude()), 10));
+                            myLocation.getLongitude()), ZOOM_LEVEL));
 
 
             for (Restaurant restaurant : restaurantList) {

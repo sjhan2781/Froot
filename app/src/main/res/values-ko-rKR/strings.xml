@@ -22,5 +22,6 @@
     <string name="title_category_activity">식이유형</string>
     <string name="text_recommended_food">추천음식</string>
     <string name="text_restaurant_recommendation">음식점 추천</string>
+    <string name="text_no_data">죄송합니다. 검색 결과가 없습니다.</string>
 
 </resources>

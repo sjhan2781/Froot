@@ -22,5 +22,6 @@
     <string name="title_category_activity">膳食类型</string>
     <string name="text_recommended_food">推荐饮食</string>
     <string name="text_restaurant_recommendation">餐厅推荐</string>
+    <string name="text_no_data">No Data</string>
 
 </resources>

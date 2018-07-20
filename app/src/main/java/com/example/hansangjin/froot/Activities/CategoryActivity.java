@@ -188,7 +188,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
                 goToNextActivity();
             }
 
-
         }
 
     }

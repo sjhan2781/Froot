@@ -22,5 +22,6 @@
     <string name="title_restaurant_map">近くのレストラン</string>
     <string name="text_recommended_food">おすすめ料理</string>
     <string name="text_restaurant_recommendation">飲食店おすすめ</string>
+    <string name="text_no_data">No Data</string>
 
 </resources>

@@ -21,6 +21,7 @@ import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.Data.Food;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
 import com.example.hansangjin.froot.R;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -156,7 +157,10 @@ public class RestaurantDetailActivity extends AppCompatActivity implements View.
         textView_available_count.setText(String.format("%s개의 적합식품", restaurant.getFoods().split(",").length));
 
         if(!restaurant.getImage_base64().isEmpty()) {
-            imageView_restaurant.setImageBitmap(Bitmap.createScaledBitmap(getBitmapFromString(restaurant.getImage_base64()), image_width, image_height, true));
+//            imageView_restaurant.setImageBitmap(Bitmap.createScaledBitmap(getBitmapFromString(restaurant.getImage_base64()), image_width, image_height, true));
+            Picasso.get().load("http://" + ApplicationController.getServerIP() + "/" + restaurant.getImage_base64())         // 로드할 이미지 경로(로컬 이미지도 가능)
+                    .fit()
+                    .into(imageView_restaurant);   // 이미지를 담을 ImageView
         }
 
         recyclerView_food.addItemDecoration(new RecyclerView.ItemDecoration() {

@@ -19,6 +19,7 @@ import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurantType;
 import com.example.hansangjin.froot.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -54,7 +55,13 @@ public class RestaurantListRecycleViewAdapter extends RecyclerView.Adapter<Resta
 
 
         if(!restaurantList.get(position).getImage_base64().isEmpty()) {
-            holder.image_rastaurant.setImageBitmap(Bitmap.createScaledBitmap(getBitmapFromString(restaurantList.get(position).getImage_base64()), image_width, image_height, true));
+//            holder.image_rastaurant.setImageBitmap(Bitmap.createScaledBitmap(getBitmapFromString(restaurantList.get(position).getImage_base64()), image_width, image_height, true));
+//                Glide.with(activity).load("http://" + ApplicationController.getServerIP() + "/" + restaurantList.get(position).getImage_base64()).into(holder.image_rastaurant);
+
+                Picasso.get().load("http://" + ApplicationController.getServerIP() + "/" + restaurantList.get(position).getImage_base64())         // 로드할 이미지 경로(로컬 이미지도 가능)
+                        .fit()
+                        .into(holder.image_rastaurant);   // 이미지를 담을 ImageView
+
         }
 
         switch (restaurantList.get(position).getHalal()) {

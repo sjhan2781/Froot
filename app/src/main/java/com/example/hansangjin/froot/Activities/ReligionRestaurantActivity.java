@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.hansangjin.froot.Adapter.RestaurantListRecycleViewAdapter;
 import com.example.hansangjin.froot.ApplicationController;
 import com.example.hansangjin.froot.BackPressCloseHandler;
+import com.example.hansangjin.froot.CustomView.NoDataDialog;
 import com.example.hansangjin.froot.Data.Restaurant;
 import com.example.hansangjin.froot.Data.RestaurantType;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
@@ -256,8 +257,17 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
                 restaurantList.add(new ParcelableRestaurant(restaurant));
             }
 
-            restaurantListRecycleViewAdapter.notifyDataSetChanged();
-            restaurantRecyclerView.invalidate();
+            if(restaurantList.isEmpty()){
+                NoDataDialog noDataDialog = new NoDataDialog(this);
+                noDataDialog.show();
+
+            }
+            else{
+                restaurantListRecycleViewAdapter.notifyDataSetChanged();
+                restaurantRecyclerView.invalidate();
+            }
+
+
 
         } catch (Exception e) {
 

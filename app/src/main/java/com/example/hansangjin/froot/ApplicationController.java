@@ -40,7 +40,9 @@ public class ApplicationController extends Application {
 
     private static ArrayList<ParcelableRestaurantType> restaurantTypes;
 
-    private static final String SERVER_IP = "165.246.193.148";
+//    private static final String SERVER_IP = "165.246.193.148";
+    private static final String SERVER_IP = "192.168.0.116";
+
 
     /**
      * 이미지 로더, 이미지 캐시, 요청 큐를 초기화한다.
