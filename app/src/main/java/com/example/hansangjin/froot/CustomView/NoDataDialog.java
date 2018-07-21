@@ -32,6 +32,8 @@ public class NoDataDialog extends Dialog implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_no_data);
 
+        button_ok = findViewById(R.id.button_ok);
+
         button_ok.setOnClickListener(this);
     }
 

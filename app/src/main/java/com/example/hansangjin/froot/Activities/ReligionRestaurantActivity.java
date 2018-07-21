@@ -220,7 +220,6 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
     private void setRestaurantList(String strJSON) {
         try {
             restaurantList.clear();
-
             JSONObject jsonObj = new JSONObject(strJSON);
 
             JSONArray jsonArray = null;
@@ -260,7 +259,6 @@ public class ReligionRestaurantActivity extends AppCompatActivity implements Vie
             if(restaurantList.isEmpty()){
                 NoDataDialog noDataDialog = new NoDataDialog(this);
                 noDataDialog.show();
-
             }
             else{
                 restaurantListRecycleViewAdapter.notifyDataSetChanged();
