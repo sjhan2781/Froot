@@ -188,6 +188,13 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
         RecyclerViewFragment fragment = new RecyclerViewFragment();
         Bundle bundle = new Bundle();
 
+        restaurantTypeList.get(0).setEnabled(true);
+
+        for (ParcelableRestaurant restaurant : restaurantList) {
+            restaurantTypeList.get(restaurant.getCategory()).setEnabled(true);
+        }
+
+
         bundle.putParcelableArrayList("restaurants", restaurantList);
         bundle.putParcelableArrayList("restaurantTypes", restaurantTypeList);
         fragment.setArguments(bundle);
@@ -195,6 +202,10 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
         viewPagerAdapter.addFragment(fragment, restaurantTypeList.get(0).getType());
 
         for (int i = 1; i < restaurantTypeList.size(); i++) {
+            if(!restaurantTypeList.get(i).isEnabled()){
+                continue;
+            }
+
             fragment = new RecyclerViewFragment();
             bundle = new Bundle();
             restaurants = new ArrayList<>();
@@ -383,7 +394,6 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
                 restaurantTypeList.add(new ParcelableRestaurantType(new RestaurantType(id, category_str)));
             }
 
-            ApplicationController.setRestaurantTypes(restaurantTypeList);
 
             setLocation(0);
 
@@ -401,6 +411,8 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
             JSONArray jsonArray = null;
 
             jsonArray = jsonObj.getJSONArray("restaurant");
+
+            Log.d("restaurantList", strJSON);
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject c = jsonArray.getJSONObject(i);

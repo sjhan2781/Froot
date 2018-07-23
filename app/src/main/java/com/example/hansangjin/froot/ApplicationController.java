@@ -40,8 +40,8 @@ public class ApplicationController extends Application {
 
     private static ArrayList<ParcelableRestaurantType> restaurantTypes;
 
-//    private static final String SERVER_IP = "165.246.193.148";
-    private static final String SERVER_IP = "192.168.0.116";
+    private static final String SERVER_IP = "165.246.193.148";
+//    private static final String SERVER_IP = "192.168.0.116";
 
 
     /**

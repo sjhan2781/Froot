@@ -14,11 +14,13 @@ public class ParcelableRestaurantType extends RestaurantType implements Parcelab
     public ParcelableRestaurantType(RestaurantType restaurantType){
         super.setId(restaurantType.getId());
         super.setType(restaurantType.getType());
+        super.setEnabled(restaurantType.isEnabled());
     }
 
     protected ParcelableRestaurantType(Parcel in) {
         super.setId(in.readInt());
         super.setType(in.readString());
+        super.enabled = in.readByte() != 0;
     }
 
     public static final Creator<ParcelableRestaurantType> CREATOR = new Creator<ParcelableRestaurantType>() {
@@ -42,5 +44,6 @@ public class ParcelableRestaurantType extends RestaurantType implements Parcelab
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(super.getId());
         dest.writeString(super.getType());
+        dest.writeByte((byte) (super.enabled ? 1 : 0));     //if myBoolean == true, byte == 1
     }
 }
