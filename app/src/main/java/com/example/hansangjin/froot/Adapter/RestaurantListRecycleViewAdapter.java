@@ -29,6 +29,11 @@ public class RestaurantListRecycleViewAdapter extends RecyclerView.Adapter<Resta
     private ArrayList<ParcelableRestaurantType> restaurantTypeList;
     private Activity activity;
 
+    public RestaurantListRecycleViewAdapter(Activity activity, ArrayList<ParcelableRestaurant> restaurantList) {
+        this.restaurantList = restaurantList;
+        this.activity = activity;
+    }
+
     public RestaurantListRecycleViewAdapter(Activity activity, ArrayList<ParcelableRestaurant> restaurantList, ArrayList<ParcelableRestaurantType> restaurantTypeList) {
         this.restaurantList = restaurantList;
         this.restaurantTypeList = restaurantTypeList;
@@ -50,7 +55,7 @@ public class RestaurantListRecycleViewAdapter extends RecyclerView.Adapter<Resta
         int image_height = holder.image_rastaurant.getLayoutParams().height;
 
         holder.textView_restaurant_name.setText(restaurantList.get(position).getName());
-        holder.textView_restaurant_category.setText(restaurantTypeList.get(restaurantList.get(position).getCategory()).getType());
+        holder.textView_restaurant_category.setText(ApplicationController.getRestaurantTypes().get(restaurantList.get(position).getCategory()).getType());
         holder.textView_recommended_count.setText(String.format("%s개", restaurantList.get(position).getFoods().split(",").length));
 
 

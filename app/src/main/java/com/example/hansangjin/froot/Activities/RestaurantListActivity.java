@@ -27,7 +27,6 @@ import com.example.hansangjin.froot.CustomView.NoDataDialog;
 import com.example.hansangjin.froot.CustomView.RecyclerViewFragment;
 import com.example.hansangjin.froot.Data.Location;
 import com.example.hansangjin.froot.Data.Restaurant;
-import com.example.hansangjin.froot.Data.RestaurantType;
 import com.example.hansangjin.froot.ParcelableData.ParcelableLocation;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurant;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurantType;
@@ -55,6 +54,10 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
     private ArrayList<ParcelableRestaurantType> restaurantTypeList;
     private ArrayList<ParcelableLocation> locationList;
 
+    private TabLayout tabLayout;
+    private  ViewPager viewPager;
+    private CustomPagerAdapter viewPagerAdapter;
+
     private View bottomSheet;
     private BottomSheetBehavior behavior;
     private BottomSheetDialogFragment myBottomSheet;
@@ -79,6 +82,7 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
     private void init() {
         creatObjects();
         setUpData();
+        setUpUI();
     }
 
     private void creatObjects() {
@@ -94,6 +98,10 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
         bottomSheet = findViewById(R.id.design_bottom_sheet);
         textView_title = findViewById(R.id.toolbar_textView_title);
         drop_down_image = findViewById(R.id.imageView_drop_down);
+
+        tabLayout = findViewById(R.id.tabs);
+        viewPager = findViewById(R.id.view_pager);
+        viewPagerAdapter = new CustomPagerAdapter(getSupportFragmentManager());
 
         restaurantList = new ArrayList<>();
         restaurantTypeList = new ArrayList<>();
@@ -179,52 +187,90 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
     }
 
     private void setUpTabView() {
-        TabLayout tabLayout = findViewById(R.id.tabs);
-        ViewPager viewPager = findViewById(R.id.view_pager);
+//        ArrayList<ParcelableRestaurant> restaurants;
+//        RecyclerViewFragment fragment = new RecyclerViewFragment();
+//        Bundle bundle = new Bundle();
+//
+//        restaurantTypeList.get(0).setEnabled(true);
+//
+//        for(int i = 1; i < restaurantTypeList.size(); i++){
+//            restaurantTypeList.get(i).setEnabled(false);
+//        }
+//
+//        for (ParcelableRestaurant restaurant : restaurantList) {
+//            restaurantTypeList.get(restaurant.getCategory()).setEnabled(true);
+//        }
+//
+//        bundle.putParcelableArrayList("restaurants", restaurantList);
+//        bundle.putParcelableArrayList("restaurantTypes", restaurantTypeList);
+//        fragment.setArguments(bundle);
+//
+//        viewPagerAdapter.addFragment(fragment, restaurantTypeList.get(0).getType());
+//
+//        for (int i = 1; i < restaurantTypeList.size(); i++) {
+//            if(!restaurantTypeList.get(i).isEnabled()){
+//                continue;
+//            }
+//
+//            fragment = new RecyclerViewFragment();
+//            bundle = new Bundle();
+//            restaurants = new ArrayList<>();
+//
+//
+//            for (ParcelableRestaurant restaurant : restaurantList) {
+//                if (restaurant.getCategory() == i) {
+//                    restaurants.add(new ParcelableRestaurant(restaurant));
+//                }
+//            }
+//
+//            bundle.putParcelableArrayList("restaurants", restaurants);
+//            bundle.putParcelableArrayList("restaurantTypes", restaurantTypeList);
+//            fragment.setArguments(bundle);
+//
+//            Log.d("aaaaaaaaaaaa", i + ", " + fragment.getArguments().getParcelableArrayList("restaurants"));
+//
+//            viewPagerAdapter.addFragment(fragment, restaurantTypeList.get(i).getType());
+//        }
 
-        CustomPagerAdapter viewPagerAdapter = new CustomPagerAdapter(getSupportFragmentManager());
 
-        ArrayList<ParcelableRestaurant> restaurants;
-        RecyclerViewFragment fragment = new RecyclerViewFragment();
-        Bundle bundle = new Bundle();
+        for(int i = 0; i < ApplicationController.getRestaurantTypes().size(); i++){
+            RecyclerViewFragment fragment = new RecyclerViewFragment();
+            Bundle bundle = new Bundle();
 
-        restaurantTypeList.get(0).setEnabled(true);
-
-        for (ParcelableRestaurant restaurant : restaurantList) {
-            restaurantTypeList.get(restaurant.getCategory()).setEnabled(true);
-        }
-
-
-        bundle.putParcelableArrayList("restaurants", restaurantList);
-        bundle.putParcelableArrayList("restaurantTypes", restaurantTypeList);
-        fragment.setArguments(bundle);
-
-        viewPagerAdapter.addFragment(fragment, restaurantTypeList.get(0).getType());
-
-        for (int i = 1; i < restaurantTypeList.size(); i++) {
-            if(!restaurantTypeList.get(i).isEnabled()){
-                continue;
-            }
-
-            fragment = new RecyclerViewFragment();
-            bundle = new Bundle();
-            restaurants = new ArrayList<>();
-
-            for (ParcelableRestaurant restaurant : restaurantList) {
-                if (restaurant.getCategory() == i) {
-                    restaurants.add(new ParcelableRestaurant(restaurant));
-                }
-            }
-
-            bundle.putParcelableArrayList("restaurants", restaurants);
-            bundle.putParcelableArrayList("restaurantTypes", restaurantTypeList);
-            fragment.setArguments(bundle);
-
-            viewPagerAdapter.addFragment(fragment, restaurantTypeList.get(i).getType());
+//            bundle.putParcelableArrayList("restaurants", restaurantList);
+//            fragment.setArguments(bundle);
+//
+            viewPagerAdapter.addFragment(fragment, ApplicationController.getRestaurantTypes().get(i).getType());
         }
 
         viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager, true);
+    }
+
+    public void notifyFragmentDataSetChanged(ArrayList<ParcelableRestaurant> restaurants){
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("restaurants", restaurantList);
+        viewPagerAdapter.getItem(0).setArguments(bundle);
+        viewPagerAdapter.getItem(0).setRestaurants();
+
+        for(int i = 1; i < ApplicationController.getRestaurantTypes().size(); i++){
+            ArrayList<ParcelableRestaurant> list = new ArrayList<>();
+            bundle = new Bundle();
+
+            for(ParcelableRestaurant restaurant : restaurants){
+                if (restaurant.getCategory() == i) {
+                    list.add(new ParcelableRestaurant(restaurant));
+                }
+            }
+
+            bundle.putParcelableArrayList("restaurants", restaurantList);
+            viewPagerAdapter.getItem(0).setArguments(bundle);
+            viewPagerAdapter.getItem(0).setRestaurants();
+            viewPagerAdapter.getItem(i).setRestaurants();
+        }
+
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPagerAdapter.notifyDataSetChanged();
     }
 
     public void setLocation(int position) {
@@ -384,16 +430,6 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
             }
 
 
-            jsonArray = jsonObj.getJSONArray("restaurant_type");
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject c = jsonArray.getJSONObject(i);
-                int id = c.getInt("type_id");
-                String category_str = c.getString("type_str");
-
-                restaurantTypeList.add(new ParcelableRestaurantType(new RestaurantType(id, category_str)));
-            }
-
 
             setLocation(0);
 
@@ -411,8 +447,6 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
             JSONArray jsonArray = null;
 
             jsonArray = jsonObj.getJSONArray("restaurant");
-
-            Log.d("restaurantList", strJSON);
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject c = jsonArray.getJSONObject(i);
@@ -437,7 +471,7 @@ public class RestaurantListActivity extends AppCompatActivity implements View.On
                 noDataDialog.show();
             }
             else{
-                setUpUI();
+                notifyFragmentDataSetChanged(restaurantList);
             }
 
         } catch (Exception e) {

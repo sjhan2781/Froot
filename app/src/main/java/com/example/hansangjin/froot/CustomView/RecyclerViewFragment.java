@@ -22,22 +22,36 @@ public class RecyclerViewFragment extends Fragment {
     ArrayList<ParcelableRestaurant> restaurants;
     ArrayList<ParcelableRestaurantType> restaurantTypes;
 
+    RecyclerView recyclerView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_restaurant);
+        recyclerView = view.findViewById(R.id.recyclerView_restaurant);
 
-        restaurants = getArguments().getParcelableArrayList("restaurants");
-        restaurantTypes = getArguments().getParcelableArrayList("restaurantTypes");
+//        restaurants = null;
+//        restaurantTypes = null;
 
-        if (!restaurants.isEmpty()){
-            view.setBackground(null);
-        }
+//        restaurants = this.getArguments().getParcelableArrayList("restaurants");
+//        restaurantTypes = this.getArguments().getParcelableArrayList("restaurantTypes");
 
-       recyclerView.setAdapter(new RestaurantListRecycleViewAdapter((RestaurantListActivity) getActivity(), restaurants, restaurantTypes));
+
+//        Log.d("bbbbbbbbbbbb", restaurants.toString());
+
+//
+//        if (!restaurants.isEmpty()){
+//            view.setBackground(null);
+//            return view;
+//        }
+
 
         return view;
+    }
+
+    public void setRestaurants() {
+        restaurants = this.getArguments().getParcelableArrayList("restaurants");
+        recyclerView.setAdapter(new RestaurantListRecycleViewAdapter((RestaurantListActivity) getActivity(), restaurants));
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 }

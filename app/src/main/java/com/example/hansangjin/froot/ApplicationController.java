@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 
+import com.example.hansangjin.froot.Data.RestaurantType;
 import com.example.hansangjin.froot.Kakao.KakaoSDKAdapter;
 import com.example.hansangjin.froot.ParcelableData.ParcelableRestaurantType;
 import com.facebook.AccessToken;
@@ -59,6 +60,12 @@ public class ApplicationController extends Application {
         KakaoSDK.init(new KakaoSDKAdapter());
 
         restaurantTypes = new ArrayList<>();
+        restaurantTypes.add(new ParcelableRestaurantType(new RestaurantType(0, "전체")));
+        restaurantTypes.add(new ParcelableRestaurantType(new RestaurantType(1, "한식")));
+        restaurantTypes.add(new ParcelableRestaurantType(new RestaurantType(2, "중식")));
+        restaurantTypes.add(new ParcelableRestaurantType(new RestaurantType(3, "일식")));
+        restaurantTypes.add(new ParcelableRestaurantType(new RestaurantType(4, "양식")));
+        restaurantTypes.add(new ParcelableRestaurantType(new RestaurantType(5, "세계음식")));
 
         facebookAccessToken = AccessToken.getCurrentAccessToken();
         kakaoAccessToken = Session.getCurrentSession().getAccessToken();
